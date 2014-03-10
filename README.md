@@ -1,2 +1,2 @@
-vocatus-datorum
+Vocatus Datorum
 ===============
