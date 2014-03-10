@@ -65,6 +65,7 @@ GEM
     json (1.8.1)
     json_pure (1.8.1)
     multi_json (1.9.0)
+    newrelic_rpm (3.6.7.159)
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
@@ -83,4 +84,5 @@ DEPENDENCIES
   data_mapper
   dm-postgres-adapter
   gipan!
+  newrelic_rpm
   sinatra
