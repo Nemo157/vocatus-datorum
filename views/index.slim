@@ -5,7 +5,7 @@ html
     meta http-equiv='Content-type' content='text/html; charset=UTF-8'
     link href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css' rel='stylesheet'
     link href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css' rel='stylesheet'
-    script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='app'
+    script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='config'
   body
     nav.navbar.navbar-inverse.navbar-static-top role='navigation'
       .navbar-header
@@ -32,3 +32,8 @@ html
         ul.nav.navbar-nav.navbar-right
     #main
       | Hello World!
+      div data-bind='if: current_page() && pages[current_page()]()'
+        div data-bind='template: { name: current_page, data: pages[current_page()] }'
+
+    script#login type="text/html"
+      | Login
