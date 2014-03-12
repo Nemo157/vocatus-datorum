@@ -61,6 +61,8 @@ module Vocatus
       resource Spirit
       resource Mixer
 
+      enable :logging
+
       configure :production do
           require 'newrelic_rpm'
       end
