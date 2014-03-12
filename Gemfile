@@ -6,5 +6,6 @@ gem 'gipan', github: 'Nemo157/gipan'
 gem 'sinatra'
 gem 'data_mapper'
 gem 'dm-postgres-adapter'
+gem 'slim'
 
 gem 'newrelic_rpm'

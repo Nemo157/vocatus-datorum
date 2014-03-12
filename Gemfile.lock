@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Nemo157/gipan.git
-  revision: f050c6dc2a91ab2978c35c0ae14edffc8f2e303d
+  revision: 376a508538e55dc7a440e2409a3ae57a9b6d3a4b
   specs:
     gipan (0.1.0)
       data_mapper (~> 1.2.0)
@@ -73,7 +73,11 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
+    slim (2.0.2)
+      temple (~> 0.6.6)
+      tilt (>= 1.3.3, < 2.1)
     stringex (1.5.1)
+    temple (0.6.7)
     tilt (1.4.1)
     uuidtools (2.1.4)
 
@@ -86,3 +90,4 @@ DEPENDENCIES
   gipan!
   newrelic_rpm
   sinatra
+  slim
