@@ -34,11 +34,24 @@ html
               li: a href='/register' Register
         ul.nav.navbar-nav.navbar-right
     #main
-      | Hello World!
       div data-bind='if: current_page() && pages[current_page()]()'
         div data-bind='template: { name: current_page, data: pages[current_page()] }'
 
     script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='config'
 
     script#login type="text/html"
-      | Login
+      form role="form"
+        .container
+          .row
+            .col-md-12
+              .page-header
+                h1 Login
+          .row
+            .col-md-12
+              .form-group
+                label.form-label for="email"
+                input#email.form-control type="email" placeholder="Enter email"
+          .row
+            .col-md-12
+              .pull-right
+                button.btn.btn-primary type='submit' Login

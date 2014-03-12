@@ -35,7 +35,7 @@ module Vocatus
         slim params[:template]
       end
 
-      get '/*' do
+      get /^\/[^\.]*$/ do
         slim :index
       end
     end
