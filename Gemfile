@@ -7,5 +7,6 @@ gem 'sinatra'
 gem 'data_mapper'
 gem 'dm-postgres-adapter'
 gem 'slim'
+gem 'sass'
 
 gem 'newrelic_rpm'

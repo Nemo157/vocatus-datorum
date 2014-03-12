@@ -35,6 +35,7 @@ define([
     }).run();
 
     ko.applyBindings(app);
+    $('body').removeClass('loading');
 
     return app;
 });

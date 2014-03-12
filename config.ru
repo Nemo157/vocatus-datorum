@@ -1,8 +1,6 @@
 $: << 'lib'
 
 require 'bundler/setup'
-require 'slim'
-require 'sinatra'
 require 'vocatus/api'
 require 'vocatus/app'
 

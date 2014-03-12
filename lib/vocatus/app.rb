@@ -1,3 +1,6 @@
+require 'slim'
+require 'sass'
+require 'sinatra'
 require 'vocatus/slim_helpers'
 require 'vocatus/api'
 
