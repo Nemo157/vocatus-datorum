@@ -7,4 +7,4 @@ DataMapper.auto_upgrade!
 
 require 'vocatus/seed'
 
-Vocatus::Datorum::Root.finalize
+Vocatus::Datorum::Api.finalize

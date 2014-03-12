@@ -54,9 +54,7 @@ module Vocatus
       has n, :recipes
     end
 
-    class Root < GipAN::Api
-      root_path 'api'
-
+    class Api < GipAN::Api
       resource Cocktail
       resource Recipe
       resource Ingredient

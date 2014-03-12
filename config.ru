@@ -1,6 +1,9 @@
 $:<<'lib'
 
 require 'bundler/setup'
+require 'sinatra'
 require 'vocatus/app'
 
-run Vocatus::Datorum::Root
+map '/api' do
+  run Vocatus::Datorum::Api
+end
