@@ -1,19 +1,22 @@
 define([
     'jquery',
     'knockout',
-    'knockout.mapping'
+    'knockout.mapping',
+    'models/cocktail'
 ], function (
     $,
     ko,
-    mapping
+    mapping,
+    Cocktail
 ) {
     var page = {
-        cocktails: ko.observableArray()
+        cocktails: ko.observableArray(),
+        load: function () {
+            $.get('/api/cocktails', function (data) {
+                mapping.fromJS(data.items, Cocktail.mapping, page.cocktails);
+            });
+        }
     };
-
-    $.get('/api/cocktails', function (data) {
-        mapping.fromJS(data.items, {}, page.cocktails);
-    });
 
     return page;
 });

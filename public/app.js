@@ -24,18 +24,29 @@ define([
             can_edit: ko.observable(false)
         },
         goToPage: function (page) {
-            if (!this.pages[page]) {
-                this.pages[page] = ko.observable();
-                var scripts = ['pages/' + page];
-                if ($('#' + page).length === 0) {
-                    scripts.push('text!templates/' + page + '.html');
+            if (this.pages[page]) {
+                var pageModel = this.pages[page]();
+                if (pageModel && pageModel.load) {
+                    pageModel.load();
                 }
-                require(scripts, _.bind(this.pageLoaded, this, page), _.bind(this.pageLoadFailed, this, page));
+            } else {
+                this.loadPage(page);
             }
             this.current_page(page);
         },
+        loadPage: function (page) {
+            this.pages[page] = ko.observable();
+            var scripts = ['pages/' + page];
+            if ($('#' + page).length === 0) {
+                scripts.push('text!templates/' + page + '.html');
+            }
+            require(scripts, _.bind(this.pageLoaded, this, page), _.bind(this.pageLoadFailed, this, page));
+        },
         pageLoaded: function (page, pageModel, pageTemplate) {
-            if (pageTemplate) {
+            if (pageModel && pageModel.load) {
+                pageModel.load();
+            }
+            if (_.isString(pageTemplate)) {
                 $('body').append($('<script>').attr({ id: page, type: 'text/html' }).text(pageTemplate));
             }
             this.pages[page](pageModel);
@@ -50,7 +61,11 @@ define([
         this.setLocationProxy(new PushLocationProxy(this));
 
         this.get('/', function () {
-            app.goToPage('root');
+            app.goToPage('index');
+        });
+
+        this.get('/:page/:id', function () {
+            app.goToPage(this.params.page);
         });
 
         this.get('/:page', function () {

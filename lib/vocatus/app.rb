@@ -32,6 +32,7 @@ module Vocatus
       set :root, File.realpath('../../', File.dirname(__FILE__))
 
       get '/' do
+        params[:page] = :index
         slim :main do
           slim :index rescue halt 404
         end
