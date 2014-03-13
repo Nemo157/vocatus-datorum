@@ -11,7 +11,7 @@ define([
 ) {
     var page = {
         cocktails: ko.observableArray(),
-        load: function () {
+        refresh: function () {
             $.get('/api/cocktails', function (data) {
                 mapping.fromJS(data.items, Cocktail.mapping, page.cocktails);
             });

@@ -34,11 +34,11 @@ html
               li: a href='/register' Register
         ul.nav.navbar-nav.navbar-right
     #main
-      div data-bind='if: current_page() && pages[current_page()]()'
-        div data-bind='template: { name: current_page, data: pages[current_page()] }'
+      div data-bind="foreach: { data: pages, as: 'page' }"
+        div data-bind='pageFade: $root.current_page() === page.name && page.loaded'
+          div data-bind='template: { if: page.loaded, name: page.name, data: page.model }'
 
-    - if block_given?
-      script id=params[:page] type='text/html'
-        == yield
+    script id=params[:page] type='text/html'
+      == slim params[:page].to_sym
 
     script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='config'

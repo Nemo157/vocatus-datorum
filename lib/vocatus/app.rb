@@ -33,15 +33,11 @@ module Vocatus
 
       get '/' do
         params[:page] = :index
-        slim :main do
-          slim :index rescue halt 404
-        end
+        slim :main
       end
 
       get '/:page' do
-        slim :main do
-          slim params[:page].to_sym rescue redirect to('/')
-        end
+        slim :main
       end
 
       get '/templates/:template.html' do
