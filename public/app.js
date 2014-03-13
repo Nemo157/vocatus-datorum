@@ -26,7 +26,7 @@ define([
         goToPage: function (page) {
             var pageHolder = _.find(this.pages(), { name: page });
             if (pageHolder) {
-                if (pageHolder.loaded() && pageHolder.model().refresh) {
+                if (pageHolder.model() && pageHolder.model().refresh) {
                     pageHolder.model().refresh();
                 }
             } else {
@@ -35,31 +35,41 @@ define([
             this.current_page(page);
         },
         loadPage: function (page) {
-            this.pages.push({
+            var pageHolder = {
                 name: page,
-                loaded: ko.observable(),
+                templateLoaded: ko.observable($('#' + page).length > 0),
                 model: ko.observable()
+            };
+            pageHolder.loaded = ko.computed(function () {
+                return pageHolder.templateLoaded() && !!pageHolder.model();
             });
-            var scripts = ['pages/' + page];
-            if ($('#' + page).length === 0) {
-                scripts.push('text!templates/' + page + '.html');
+            if (!pageHolder.templateLoaded()) {
+                require(['text!templates/' + page + '.html'], _.bind(this.pageTemplateLoaded, this, pageHolder), _.bind(this.pageTemplateLoadFailed, this, pageHolder));
             }
-            require(scripts, _.bind(this.pageLoaded, this, page), _.bind(this.pageLoadFailed, this, page));
+            require(['pages/' + page], _.bind(this.pageModelLoaded, this, pageHolder), _.bind(this.pageModelLoadFailed, this, pageHolder));
+            this.pages.push(pageHolder);
         },
-        pageLoaded: function (page, pageModel, pageTemplate) {
+        pageModelLoaded: function (pageHolder, pageModel) {
             if (pageModel && pageModel.refresh) {
                 pageModel.refresh();
             }
-            if (_.isString(pageTemplate)) {
-                $('body').append($('<script>').attr({ id: page, type: 'text/html' }).text(pageTemplate));
-            }
-            var pageHolder = _.find(this.pages(), { name: page });
             pageHolder.model(pageModel);
-            pageHolder.loaded(true);
         },
-        pageLoadFailed: function (page, error) {
-            console.log("Failed to load page " + page);
+        pageTemplateLoaded: function (pageHolder, pageTemplate) {
+            if (_.isString(pageTemplate)) {
+                $('body').append($('<script>').attr({ id: pageHolder.name, type: 'text/html' }).text(pageTemplate));
+            }
+            pageHolder.templateLoaded(true);
+        },
+        pageModelLoadFailed: function (pageHolder, error) {
+            console.log("Failed to load model for page " + pageHolder.name + ", using an empty one");
             console.log(error);
+            this.pageModelLoaded(pageHolder, {});
+        },
+        pageTemplateLoadFailed: function (pageHolder, error) {
+            console.log("Failed to load template for page " + pageHolder.name + ", using an empty one");
+            console.log(error);
+            this.pageTemplateLoaded(pageHolder, '');
         }
     };
 
