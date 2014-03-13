@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    title Vocatus Datorum
+    meta http-equiv='Content-type' content='text/html; charset=UTF-8'
+    link href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css' rel='stylesheet'
+    link href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css' rel='stylesheet'
+    sass:
+      body.loading
+        .loading-hidden
+          display: none
+  body.loading
+    nav.navbar.navbar-inverse.navbar-static-top role='navigation'
+      .navbar-header
+        == navbar_toggle '#navbar-collapse-1'
+        a.navbar-brand href='/' Vocatus Datorum
+      .collapse.navbar-collapse#navbar-collapse-1
+        ul.nav.navbar-nav
+          li: a href='/cocktails' Cocktails
+          == dropdown text: 'Ingredients', el: 'li'
+            li: a href='/ingredients' All
+            li.divider
+            li: a href='/spirits' Spirits
+            li: a href='/mixers' Mixers
+        ul.nav.navbar-nav.navbar-right.loading-hidden
+          == ko 'if: current_user.logged_in'
+            == dropdown element: "span data-bind='text: current_user.nickname'", el: 'li'
+              li: a href='/user' Profile
+              li: a href='/session' Session
+              li: a href='/session' data-method='DELETE' data-confirm='Are you sure you want to logout?' Logout
+          == ko 'ifnot: current_user.logged_in'
+            == dropdown text: 'Not logged in', el: 'li'
+              li: a href='/login' Login
+              li: a href='/register' Register
+        ul.nav.navbar-nav.navbar-right
+    #main
+      div data-bind='if: current_page() && pages[current_page()]()'
+        div data-bind='template: { name: current_page, data: pages[current_page()] }'
+
+    - if block_given?
+      script id=params[:page] type='text/html'
+        == yield
+
+    script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='config'

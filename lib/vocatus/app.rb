@@ -31,12 +31,20 @@ module Vocatus
 
       set :root, File.realpath('../../', File.dirname(__FILE__))
 
-      get '/templates/:template' do
-        slim params[:template]
+      get '/' do
+        slim :main do
+          slim :index rescue halt 404
+        end
       end
 
-      get /^\/[^\.]*$/ do
-        slim :index
+      get '/:page' do
+        slim :main do
+          slim params[:page].to_sym rescue redirect to('/')
+        end
+      end
+
+      get '/templates/:template.html' do
+        slim params[:template].to_sym rescue halt 404
       end
     end
   end

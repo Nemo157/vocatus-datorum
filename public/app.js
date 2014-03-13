@@ -19,18 +19,25 @@ define([
     var app = {
         pages: {},
         current_page: ko.observable(),
-        current_user: ko.observable(),
+        current_user: {
+            logged_in: ko.observable(false),
+            can_edit: ko.observable(false)
+        },
         goToPage: function (page) {
             if (!this.pages[page]) {
                 this.pages[page] = ko.observable();
-                require(
-                    ['pages/' + page],
-                    _.bind(this.pageLoaded, this, page),
-                    _.bind(this.pageLoadFailed, this, page));
+                var scripts = ['pages/' + page];
+                if ($('#' + page).length === 0) {
+                    scripts.push('text!templates/' + page + '.html');
+                }
+                require(scripts, _.bind(this.pageLoaded, this, page), _.bind(this.pageLoadFailed, this, page));
             }
             this.current_page(page);
         },
-        pageLoaded: function (page, pageModel) {
+        pageLoaded: function (page, pageModel, pageTemplate) {
+            if (pageTemplate) {
+                $('body').append($('<script>').attr({ id: page, type: 'text/html' }).text(pageTemplate));
+            }
             this.pages[page](pageModel);
         },
         pageLoadFailed: function (page, error) {

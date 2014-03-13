@@ -1,0 +1,20 @@
+.container
+  .row
+    .col-md-12
+      .page-header
+        h1 Cocktails
+        == ko 'if: $root.current_user.can_edit'
+          .pull-right
+            a.btn.btn-primary href='new'
+              span.glyphicon.glyphicon-plus
+  .row
+    .col-md-12
+      = slim :'shared/notice'
+  .row
+    .col-md-12
+      .list-group.media data-bind="foreach: { data: cocktails, as: 'cocktail' }"
+        a.list-group-item.media data-bind='attr: { href: cocktail.url }'
+          img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: cocktail.image_url }' style='width:64px'
+          .media-body
+            h4.list-group-item-heading.media-heading data-bind='text: cocktail.name'
+            p.list-group-item-text data-bind='text: cocktail.description'
