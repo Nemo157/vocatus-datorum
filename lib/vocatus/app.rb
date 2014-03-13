@@ -41,7 +41,7 @@ module Vocatus
       end
 
       get '/templates/:template.html' do
-        slim params[:template].to_sym rescue halt 404
+        slim params[:template].to_sym rescue slim :missing
       end
     end
   end
