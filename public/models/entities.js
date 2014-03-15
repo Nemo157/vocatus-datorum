@@ -12,7 +12,7 @@ define([
     var EntityListType = function (config) {
         var EntityList = function (data) {
             this.items = ko.observableArray();
-            this.onLoad(data);
+            this.onLoad(false, data);
             if (config.init && config.init.call) {
                 config.init.call(this);
             }

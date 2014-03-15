@@ -30,15 +30,19 @@ define([
             Entity.prototype.list_url = '/' + Entity.plural_name;
 
             Entity.prototype.refresh = function () {
-                return when($.get(this.uri())).then(_.bind(this.onLoad, this));
+                return when($.get(this.uri())).then(_.bind(this.onLoad, this, true));
             };
 
-            Entity.prototype.onLoad = function (data) {
+            Entity.prototype.onLoad = function (loaded, data) {
                 mapping.fromJS(data, Entity.mapping, this);
                 if (config.afterRefresh) {
                     var self = this;
-                    return when(config.afterRefresh.call(this)).then(function () { return self; });
+                    return when(config.afterRefresh.call(this)).then(function () {
+                        this.loaded = this.loaded || loaded;
+                        return self;
+                    });
                 } else {
+                    this.loaded = this.loaded || loaded;
                     return this;
                 }
             };
