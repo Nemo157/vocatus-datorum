@@ -4,6 +4,6 @@ define([
     EntityType
 ) {
     return new EntityType({
-        name: 'cocktail'
+        name: 'mixer'
     });
 });

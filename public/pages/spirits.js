@@ -1,12 +1,12 @@
 define([
-    'models/cocktail',
+    'models/spirit',
     './entities'
 ], function (
-    Cocktail,
+    Spirit,
     EntitiesPage
 ) {
     return new EntitiesPage({
-        model: Cocktail,
-        url: '/api/cocktails'
+        model: Spirit,
+        url: '/api/spirits'
     });
 });

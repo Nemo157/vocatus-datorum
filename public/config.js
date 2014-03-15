@@ -34,10 +34,7 @@
                 '//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping',
                 '//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping'
             ),
-            'jStorage': choose(
-                '//cdnjs.cloudflare.com/ajax/libs/jStorage/0.4.4/jstorage.min',
-                '//cdnjs.cloudflare.com/ajax/libs/jStorage/0.4.4/jstorage'
-            ),
+            'jStorage': '//cdnjs.cloudflare.com/ajax/libs/jStorage/0.4.4/jstorage.min',
             'sammy': choose(
                 '//rawgithub.com/quirkey/sammy/v0.7.5/lib/min/sammy.min',
                 '//rawgithub.com/quirkey/sammy/v0.7.5/lib/sammy'
@@ -49,7 +46,8 @@
             'text': choose(
                 '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text',
                 '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text'
-            )
+            ),
+            'inflector': '//rawgithub.com/Nemo157/underscore.inflection/master/src/underscore.inflection'
         },
         map: {
             '*': {
@@ -63,6 +61,9 @@
             },
             'knockout-projections': {
                 knockout: 'knockout'
+            },
+            'inflector': {
+                underscore: 'lodash'
             }
         },
         shim: {
