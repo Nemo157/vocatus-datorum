@@ -45,14 +45,14 @@ define([
 
             Entity.mapping = _.merge({
                 create: function (options) {
-                    return Entity.create(options.data);
+                    return Entity.create(options.data, true);
                 },
                 key: function (data) {
                     return ko.utils.unwrapObservable(data.uri);
                 }
             }, config.mapping);
 
-            Entity.create = function (data) {
+            Entity.create = function (data, loaded) {
                 var entity = EntityBase.find(config.name, data.uri);
                 if (!entity) {
                     entity = new Entity(data);
@@ -64,6 +64,7 @@ define([
                         EntityBase.cache(config.name, uri, entity);
                     });
                 }
+                entity.loaded = entity.loaded || loaded;
                 return entity;
             };
 

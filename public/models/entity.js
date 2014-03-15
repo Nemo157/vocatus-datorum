@@ -32,7 +32,7 @@ define([
             return Entity.create({
                 id: id,
                 uri: Entity.prototype.root + '/api/' + Entity.plural_name + '/' + id
-            });
+            }, false);
         };
 
         EntityBase.init(Entity, config);
