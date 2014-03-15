@@ -37,6 +37,12 @@ module Vocatus
       end
 
       get '/:page' do
+        pass if params[:page].include?('.')
+        slim :main
+      end
+
+      get '/:page/*' do
+        pass if params[:splat].first.include?('.')
         slim :main
       end
 

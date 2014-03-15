@@ -5,6 +5,7 @@
     };
 
     requirejs.config({
+        baseUrl: '/',
         paths: {
             'jquery': choose(
                 '//code.jquery.com/jquery-1.10.2.min',
@@ -76,5 +77,5 @@
         }
     });
 
-    require(['app.js']);
+    require(['/app.js']);
 })();
