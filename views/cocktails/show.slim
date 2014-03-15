@@ -1,39 +1,39 @@
-.container
+.container data-bind='with: cocktail'
   .row
     .col-md-12
       .page-header
         h1
-          a> data-bind='attr: { href: cocktail().list_url }' Cocktails
+          a> data-bind='attr: { href: list_url }' Cocktails
           | -
-          span< data-bind='text: cocktail().name'
+          span< data-bind='text: name'
           == ko 'if: $root.current_user.can_edit'
             .pull-right
-              a.btn.btn-primary data-bind='attr: { href: cocktail().edit_url }'
+              a.btn.btn-primary data-bind='attr: { href: edit_url }'
                 span.glyphicon.glyphicon-pencil
-              a.btn.btn-danger data-bind='attr: { href: cocktail().url, "data-confirm": "Are you sure you want to delete " + cocktail().name + "?" }' data-method='delete'
+              a.btn.btn-danger data-bind='attr: { href: url, "data-confirm": "Are you sure you want to delete " + name + "?" }' data-method='delete'
                 span.glyphicon.glyphicon-trash
   .row
     .col-md-12
       = slim :'shared/notice'
   .row
     .col-xs-12.col-sm-3
-      img.img-thumbnail.img-responsive.center-block data-bind='attr: { src: cocktail().image_url }'
+      img.img-thumbnail.img-responsive.center-block data-bind='attr: { src: image_url }'
     .col-sm-9
       .col-md-12
-        .well data-bind='text: cocktail().description'
+        .well data-bind='text: description'
       .col-md-12
         h3
           | Recipes
           == ko 'if: $root.current_user.can_edit'
             .pull-right
-              a.btn.btn-link data-bind='attr: { href: cocktail().new_recipe_url }'
+              a.btn.btn-link data-bind='attr: { href: new_recipe_url }'
                 span.glyphicon.glyphicon-plus.text-primary
       == ko 'if: $root.current_user.can_edit'
-        == ko 'if: cocktail().recipes && cocktail().recipes.items().length === 0'
+        == ko 'if: recipes && recipes.items().length === 0'
           .col-sm-12
             .alert.alert-info
               | None yet, you should
-              a.alert-link<> data-bind='attr: { href: cocktail().new_recipe_url }' add
+              a.alert-link<> data-bind='attr: { href: new_recipe_url }' add
               | one.
       / - @cocktail.recipes.each do |recipe|
         .col-sm-12.col-md-6

@@ -21,13 +21,14 @@ define([
         EntityList.plural_name = config.name;
         EntityList.singular_name = inflector.singularize(config.name);
 
+        EntityList.prototype.root = window.location.protocol + '//' + window.location.host;
         EntityList.prototype.model = config.model;
         EntityList.prototype.list_model = EntityList;
         EntityList.prototype.list_url = '/' + EntityList.plural_name;
 
         EntityList.get = function (uri) {
             return EntityList.create({
-                uri: uri || '/api/' + EntityList.plural_name
+                uri: uri || EntityList.prototype.root + '/api/' + EntityList.plural_name
             });
         };
 

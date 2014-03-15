@@ -13,11 +13,18 @@ define([
 ) {
     var ShowCocktail = function () {
         _.bindAll(this);
-        this.cocktail = ko.observable({});
+        this.cocktail = ko.observable();
     };
 
     ShowCocktail.prototype.refresh = function (params) {
-        Cocktail.get(params.id).refresh().done(this.cocktail);
+        var cocktail = Cocktail.get(params.id);
+        if (cocktail.loaded) {
+            this.cocktail(cocktail);
+            cocktail.refresh();
+        } else {
+            this.cocktail(null);
+            cocktail.refresh().done(this.cocktail);
+        }
     };
 
     return new ShowCocktail();
