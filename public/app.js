@@ -68,9 +68,21 @@ define([
             this.pageModelLoaded(pageHolder, {});
         },
         pageTemplateLoadFailed: function (pageHolder, error) {
-            console.log("Failed to load template for page " + pageHolder.name + ", using an empty one");
-            console.log(error);
-            this.pageTemplateLoaded(pageHolder, '');
+            if (true /* in development */) {
+                console.log("Failed to load template for page " + pageHolder.name + ", injecting error message");
+                console.log(error);
+                var message = error.toString();
+                var wrapped = '<div class="container"><div class="alert alert-danger"><strong>Error loading template for page ' + pageHolder.name + ':</strong> ' + message + '</div></div>';
+                if (error.xhr) {
+                    this.pageTemplateLoaded(pageHolder, wrapped + error.xhr.responseText);
+                } else {
+                    this.pageTemplateLoaded(pageHolder, wrapped);
+                }
+            } else {
+                console.log("Failed to load template for page " + pageHolder.name + ", using an empty one");
+                console.log(error);
+                this.pageTemplateLoaded(pageHolder, '');
+            }
         }
     };
 

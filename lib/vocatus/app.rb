@@ -47,7 +47,11 @@ module Vocatus
       end
 
       get '/templates/*.html' do
-        slim params[:splat].first.to_sym rescue slim :missing
+        if settings.production?
+          slim params[:splat].first.to_sym rescue slim :missing
+        else
+          slim params[:splat].first.to_sym
+        end
       end
     end
   end
