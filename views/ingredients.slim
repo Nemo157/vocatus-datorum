@@ -1,13 +1,1 @@
-.container
-  .row
-    .col-md-12
-      .page-header
-        h1 Ingredients
-  .row
-    .col-md-12
-      .list-group.media data-bind="foreach: { data: ingredients, as: 'ingredient' }"
-        a.list-group-item.media data-bind='attr: { href: ingredient.url }'
-          img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: ingredient.image_url }' style='width: 64px'
-          .media-body
-            h4.list-group-item-heading.media-heading data-bind='text: ingredient.name'
-            p.list-group-item-text data-bind='text: ingredient.description'
+== slim :entities

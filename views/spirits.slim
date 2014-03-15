@@ -1,13 +1,1 @@
-.container
-  .row
-    .col-md-12
-      .page-header
-        h1 Spirits
-  .row
-    .col-md-12
-      .list-group.media data-bind="foreach: { data: spirits, as: 'spirit' }"
-        a.list-group-item.media data-bind='attr: { href: spirit.url }'
-          img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: spirit.image_url }' style='width: 64px'
-          .media-body
-            h4.list-group-item-heading.media-heading data-bind='text: spirit.name'
-            p.list-group-item-text data-bind='text: spirit.description'
+== slim :entities

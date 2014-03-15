@@ -1,13 +1,1 @@
-.container
-  .row
-    .col-md-12
-      .page-header
-        h1 Mixers
-  .row
-    .col-md-12
-      .list-group.media data-bind="foreach: { data: mixers, as: 'mixer' }"
-        a.list-group-item.media data-bind='attr: { href: mixer.url }'
-          img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: mixer.image_url }' style='width: 64px'
-          .media-body
-            h4.list-group-item-heading.media-heading data-bind='text: mixer.name'
-            p.list-group-item-text data-bind='text: mixer.description'
+== slim :entities
