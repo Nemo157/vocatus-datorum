@@ -38,7 +38,7 @@ define([
                 if (config.afterRefresh) {
                     var self = this;
                     return when(config.afterRefresh.call(this)).then(function () {
-                        this.loaded = this.loaded || loaded;
+                        self.loaded = self.loaded || loaded;
                         return self;
                     });
                 } else {
