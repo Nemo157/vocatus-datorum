@@ -36,7 +36,7 @@ button.navbar-left.navbar-toggle type='button' data-toggle='collapse' data-targe
   span.icon-bar
 
 @@ ko
-/! ko #{call}
+/! ko #{{call}}
 == yield
 /! /ko
 

@@ -1,12 +1,11 @@
 define([
-    'models/cocktail',
+    'models/cocktails',
     'pages/entities/index'
 ], function (
-    Cocktail,
+    Cocktails,
     EntitiesIndex
 ) {
     return new EntitiesIndex({
-        model: Cocktail,
-        url: '/api/cocktails'
+        model: Cocktails
     });
 });

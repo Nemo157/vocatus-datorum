@@ -12,7 +12,7 @@
       = slim :'shared/notice'
   .row
     .col-md-12
-      .list-group.media data-bind="foreach: entities"
+      .list-group.media data-bind="foreach: entities() && entities().items"
         a.list-group-item.media data-bind='attr: { href: url }'
           img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: image_url }' style='width: 64px'
           .media-body

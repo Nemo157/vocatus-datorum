@@ -48,7 +48,8 @@
                 '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text',
                 '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text'
             ),
-            'inflector': '//rawgithub.com/Nemo157/underscore.inflection/master/src/underscore.inflection'
+            'inflector': '//rawgithub.com/Nemo157/underscore.inflection/master/src/underscore.inflection',
+            'when': '//cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when'
         },
         map: {
             '*': {

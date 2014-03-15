@@ -23,23 +23,25 @@ define([
             logged_in: ko.observable(false),
             can_edit: ko.observable(false)
         },
-        goToPage: function (page) {
+        goToPage: function (page, params) {
             var name = page.replace(/\//g, '-');
             var pageHolder = _.find(this.pages(), { name: name });
             if (pageHolder) {
+                pageHolder.params = params;
                 if (pageHolder.model() && pageHolder.model().refresh) {
-                    pageHolder.model().refresh();
+                    pageHolder.model().refresh(params);
                 }
             } else {
-                this.loadPage(page, name);
+                this.loadPage(page, name, params);
             }
             this.current_page(name);
         },
-        loadPage: function (page, name) {
+        loadPage: function (page, name, params) {
             var pageHolder = {
                 name: name,
                 templateLoaded: ko.observable($('#' + name).length > 0),
-                model: ko.observable()
+                model: ko.observable(),
+                params: params
             };
             pageHolder.loaded = ko.computed(function () {
                 return pageHolder.templateLoaded() && !!pageHolder.model();
@@ -52,7 +54,7 @@ define([
         },
         pageModelLoaded: function (pageHolder, pageModel) {
             if (pageModel && pageModel.refresh) {
-                pageModel.refresh();
+                pageModel.refresh(pageHolder.params);
             }
             pageHolder.model(pageModel);
         },
@@ -204,7 +206,7 @@ define([
             _.forEach(routes, function (map, route) {
                 if (_.isString(map)) {
                     this.get(root + (route ? '/' + route : ''), function () {
-                        app.goToPage(map);
+                        app.goToPage(map, this.params);
                     });
                 } else {
                     mapRoutes(root + route, map);
@@ -215,7 +217,7 @@ define([
         mapRoutes('/', explicitRoutes);
 
         this.get('/:page', function () {
-            app.goToPage(this.params.page);
+            app.goToPage(this.params.page, this.params);
         });
     }).run();
 

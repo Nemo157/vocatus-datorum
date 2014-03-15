@@ -1,12 +1,11 @@
 define([
-    'models/spirit',
+    'models/spirits',
     'pages/entities/index'
 ], function (
-    Spirit,
+    Spirits,
     EntitiesIndex
 ) {
     return new EntitiesIndex({
-        model: Spirit,
-        url: '/api/spirits'
+        model: Spirits
     });
 });
