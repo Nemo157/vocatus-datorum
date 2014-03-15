@@ -1,11 +1,11 @@
 define([
     'models/mixer',
-    './entities'
+    'pages/entities/index'
 ], function (
     Mixer,
-    EntitiesPage
+    EntitiesIndex
 ) {
-    return new EntitiesPage({
+    return new EntitiesIndex({
         model: Mixer,
         url: '/api/mixers'
     });

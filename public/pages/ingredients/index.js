@@ -1,11 +1,11 @@
 define([
     'models/ingredient',
-    './entities'
+    'pages/entities/index'
 ], function (
     Ingredient,
-    EntitiesPage
+    EntitiesIndex
 ) {
-    return new EntitiesPage({
+    return new EntitiesIndex({
         model: Ingredient,
         url: '/api/ingredients'
     });

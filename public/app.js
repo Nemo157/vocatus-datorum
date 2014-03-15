@@ -24,20 +24,21 @@ define([
             can_edit: ko.observable(false)
         },
         goToPage: function (page) {
-            var pageHolder = _.find(this.pages(), { name: page });
+            var name = page.replace(/\//g, '-');
+            var pageHolder = _.find(this.pages(), { name: name });
             if (pageHolder) {
                 if (pageHolder.model() && pageHolder.model().refresh) {
                     pageHolder.model().refresh();
                 }
             } else {
-                this.loadPage(page);
+                this.loadPage(page, name);
             }
-            this.current_page(page);
+            this.current_page(name);
         },
-        loadPage: function (page) {
+        loadPage: function (page, name) {
             var pageHolder = {
-                name: page,
-                templateLoaded: ko.observable($('#' + page).length > 0),
+                name: name,
+                templateLoaded: ko.observable($('#' + name).length > 0),
                 model: ko.observable()
             };
             pageHolder.loaded = ko.computed(function () {
@@ -164,16 +165,42 @@ define([
         };
     })();
 
+    var explicitRoutes = {
+        '': 'index',
+        'cocktails': {
+            '': 'cocktails/index',
+            ':id': 'cocktails/show'
+        },
+        'ingredients': {
+            '': 'ingredients/index',
+            ':id': 'ingredients/show'
+        },
+        'spirits': {
+            '': 'spirits/index',
+            ':id': 'spirits/show'
+        },
+        'mixers': {
+            '': 'mixers/index',
+            ':id': 'mixers/show'
+        }
+    };
+
     sammy(function() {
         this.setLocationProxy(new PushLocationProxy(this));
 
-        this.get('/', function () {
-            app.goToPage('index');
-        });
+        var mapRoutes = _.bind(function (root, routes) {
+            _.forEach(routes, function (map, route) {
+                if (_.isString(map)) {
+                    this.get(root + (route ? '/' + route : ''), function () {
+                        app.goToPage(map);
+                    });
+                } else {
+                    mapRoutes(root + route, map);
+                }
+            }, this);
+        }, this);
 
-        this.get('/:page/:id', function () {
-            app.goToPage(this.params.page);
-        });
+        mapRoutes('/', explicitRoutes);
 
         this.get('/:page', function () {
             app.goToPage(this.params.page);

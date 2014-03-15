@@ -46,8 +46,8 @@ module Vocatus
         slim :main
       end
 
-      get '/templates/:template.html' do
-        slim params[:template].to_sym rescue slim :missing
+      get '/templates/*.html' do
+        slim params[:splat].first.to_sym rescue slim :missing
       end
     end
   end
