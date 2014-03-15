@@ -1,0 +1,23 @@
+nav.navbar.navbar-inverse.navbar-static-top role='navigation'
+  .navbar-header
+    == navbar_toggle '#navbar-collapse-1'
+    a.navbar-brand href='/' Vocatus Datorum
+  .collapse.navbar-collapse#navbar-collapse-1
+    ul.nav.navbar-nav
+      li: a href='/cocktails' Cocktails
+      == dropdown text: 'Ingredients', el: 'li'
+        li: a href='/ingredients' All
+        li.divider
+        li: a href='/spirits' Spirits
+        li: a href='/mixers' Mixers
+    ul.nav.navbar-nav.navbar-right.loading-hidden
+      == ko 'if: current_user.logged_in'
+        == dropdown element: "span data-bind='text: current_user.nickname'", el: 'li'
+          li: a href='/user' Profile
+          li: a href='/session' Session
+          li: a href='/session' data-method='DELETE' data-confirm='Are you sure you want to logout?' Logout
+      == ko 'ifnot: current_user.logged_in'
+        == dropdown text: 'Not logged in', el: 'li'
+          li: a href='/login' Login
+          li: a href='/register' Register
+    ul.nav.navbar-nav.navbar-right
