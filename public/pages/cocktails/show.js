@@ -14,6 +14,9 @@ define([
     var ShowCocktail = function () {
         _.bindAll(this);
         this.cocktail = ko.observable();
+        this.ready = ko.computed(function () {
+            return !!this.cocktail();
+        }, this);
     };
 
     ShowCocktail.prototype.refresh = function (params) {
@@ -23,7 +26,7 @@ define([
             cocktail.refresh();
         } else {
             this.cocktail(null);
-            cocktail.refresh().done(this.cocktail);
+            cocktail.refresh().then(this.cocktail);
         }
     };
 

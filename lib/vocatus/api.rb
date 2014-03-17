@@ -63,6 +63,13 @@ module Vocatus
 
       enable :logging
 
+      configure :development do
+        puts 'Simulating really slow connection/Api'
+        before do
+          sleep 1
+        end
+      end
+
       configure :production do
           require 'newrelic_rpm'
       end

@@ -46,6 +46,9 @@ define([
             pageHolder.loaded = ko.computed(function () {
                 return pageHolder.templateLoaded() && !!pageHolder.model();
             });
+            pageHolder.ready = ko.computed(function () {
+                return pageHolder.loaded() && (!pageHolder.model().ready || pageHolder.model().ready());
+            });
             if (!pageHolder.templateLoaded()) {
                 require(['text!templates/' + page + '.html'], _.bind(this.pageTemplateLoaded, this, pageHolder), _.bind(this.pageTemplateLoadFailed, this, pageHolder));
             }

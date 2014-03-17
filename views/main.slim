@@ -13,8 +13,8 @@ html
     == slim :navbar
     #main
       div data-bind="foreach: { data: pages, as: 'page' }"
-        div data-bind='pageFade: $root.current_page() === page.name && page.loaded'
-          div data-bind='template: { if: page.loaded, name: page.name, data: page.model }'
+        div data-bind='pageFade: $root.current_page() === page.name && page.ready'
+          div data-bind='template: { if: page.ready, name: page.name, data: page.model }'
 
     script id=params[:page] type='text/html'
       == slim params[:page].to_sym rescue slim :missing

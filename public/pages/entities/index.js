@@ -18,10 +18,17 @@ define([
         this[config.model.plural_name] = this.entities;
         this.model = config.model;
         this.title = titleCase(config.model.plural_name);
+        this.ready = ko.computed(function () {
+            return !!this.entities();
+        }, this);
     };
 
     EntitiesPage.prototype.refresh = function () {
-        this.model.get().refresh().done(this.entities);
+        if (this.entities()) {
+            this.entities().refresh();
+        } else {
+            this.model.get().refresh().then(this.entities);
+        }
     };
 
     return EntitiesPage;
