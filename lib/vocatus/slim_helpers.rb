@@ -28,6 +28,7 @@ end
 
 __END__
 
+
 @@ navbar_toggle
 button.navbar-left.navbar-toggle type='button' data-toggle='collapse' data-target='#{target}'
   span.sr-only Toggle navigation
@@ -35,10 +36,12 @@ button.navbar-left.navbar-toggle type='button' data-toggle='collapse' data-targe
   span.icon-bar
   span.icon-bar
 
+
 @@ ko
 /! ko #{{call}}
 == yield
 /! /ko
+
 
 @@ dropdown
 *{ tag: el, class: 'dropdown' }

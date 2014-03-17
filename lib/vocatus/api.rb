@@ -69,10 +69,6 @@ module Vocatus
           sleep 1
         end
       end
-
-      configure :production do
-          require 'newrelic_rpm'
-      end
     end
   end
 end
