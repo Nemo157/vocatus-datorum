@@ -12,6 +12,13 @@ html
   body.loading
     == slim :navbar
     #main
+      - if settings.production?
+        .container
+          .alert.alert-danger
+            strong> Vocatus Datorum is currently under construction.
+            | Do not entrust any real data to it. All data is publicly accessible
+              and has a high chance of disappearing at any time.
+
       div data-bind="foreach: { data: pages, as: 'page' }"
         div data-bind='pageFade: $root.current_page() === page.name && page.ready'
           div data-bind='template: { if: page.ready, name: page.name, data: page.model }'
