@@ -22,6 +22,14 @@ module Vocatus
           element: options[:element],
         }, &block
       end
+
+      def render_template template
+        if settings.production?
+          slim template.to_sym rescue slim :missing
+        else
+          slim template.to_sym
+        end
+      end
     end
   end
 end

@@ -44,12 +44,17 @@
                 '//rawgithub.com/quirkey/sammy/v0.7.5/lib/min/plugins/sammy.push_location_proxy.min',
                 '//rawgithub.com/quirkey/sammy/v0.7.5/lib/plugins/sammy.push_location_proxy'
             ),
-            'text': choose(
-                '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text',
-                '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text'
-            ),
+            'text': '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.10/text',
             'inflector': '//rawgithub.com/Nemo157/underscore.inflection/master/src/underscore.inflection',
-            'when': '//cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when'
+            'when': '//cdnjs.cloudflare.com/ajax/libs/when/2.7.1/when',
+            'knockout.validation': choose(
+                '//rawgithub.com/Knockout-Contrib/Knockout-Validation/master/Dist/knockout.validation.min',
+                '//rawgithub.com/Knockout-Contrib/Knockout-Validation/master/Dist/knockout.validation'
+            ),
+            'knockout-bootstrap': choose(
+                '//rawgithub.com/billpull/knockout-bootstrap/master/build/knockout-bootstrap.min',
+                '//rawgithub.com/billpull/knockout-bootstrap/master/src/knockout-bootstrap'
+            )
         },
         map: {
             '*': {
@@ -58,10 +63,10 @@
             'knockout-shim': {
                 knockout: 'knockout'
             },
-            'knockout.mapping': {
+            'knockout-projections': {
                 knockout: 'knockout'
             },
-            'knockout-projections': {
+            'knockout-bootstrap': {
                 knockout: 'knockout'
             },
             'inflector': {
@@ -71,6 +76,9 @@
         shim: {
             bootstrap: {
                 deps: ['jquery']
+            },
+            'knockout-bootstrap': {
+                deps: ['bootstrap', 'jquery']
             },
             jStorage: {
                 exports: '$.jStorage'

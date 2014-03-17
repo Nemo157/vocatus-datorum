@@ -3,19 +3,26 @@ define([
     'lodash',
     'jquery',
     'knockout',
-    'sammy',
+    'knockout.validation',
     'require',
     'bootstrap',
-    'sammy.push_location_proxy'
+    'router'
 ], function (
     _,
     $,
     ko,
-    sammy,
+    validation,
     require,
     bootstrap,
-    PushLocationProxy
+    router
 ) {
+    validation.init({
+        insertMessages: false,
+        decorateElement: true,
+        errorElementClass: 'has-error',
+        parseInputAttributes: true
+    });
+
     var app = {
         pages: ko.observableArray(),
         current_page: ko.observable(),
@@ -182,47 +189,8 @@ define([
         };
     })();
 
-    var explicitRoutes = {
-        '': 'index',
-        'cocktails': {
-            '': 'cocktails/index',
-            ':id': 'cocktails/show'
-        },
-        'ingredients': {
-            '': 'ingredients/index',
-            ':id': 'ingredients/show'
-        },
-        'spirits': {
-            '': 'spirits/index',
-            ':id': 'spirits/show'
-        },
-        'mixers': {
-            '': 'mixers/index',
-            ':id': 'mixers/show'
-        }
-    };
-
-    sammy(function() {
-        this.setLocationProxy(new PushLocationProxy(this));
-
-        var mapRoutes = _.bind(function (root, routes) {
-            _.forEach(routes, function (map, route) {
-                if (_.isString(map)) {
-                    this.get(root + (route ? '/' + route : ''), function () {
-                        app.goToPage(map, this.params);
-                    });
-                } else {
-                    mapRoutes(root + route, map);
-                }
-            }, this);
-        }, this);
-
-        mapRoutes('/', explicitRoutes);
-
-        this.get('/:page', function () {
-            app.goToPage(this.params.page, this.params);
-        });
-    }).run();
+    router.setApp(app);
+    router.run();
 
     ko.applyBindings(app);
     $('body').removeClass('loading');

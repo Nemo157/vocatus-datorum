@@ -1,5 +1,11 @@
 define([
+    'knockout'
 ], function (
+    ko
 ) {
-    return {};
+    return {
+        email: ko.observable(),
+        login: function () {
+        }
+    };
 });

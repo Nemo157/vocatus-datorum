@@ -24,6 +24,6 @@ html
           div data-bind='template: { if: page.ready, name: page.name, data: page.model }'
 
     script id=params[:page] type='text/html'
-      == slim params[:page].to_sym rescue slim :missing
+      == render_template params[:page]
 
     script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='/config'
