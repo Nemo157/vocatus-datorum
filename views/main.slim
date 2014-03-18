@@ -20,8 +20,8 @@ html
               and has a high chance of disappearing at any time.
 
       div data-bind="foreach: { data: pages, as: 'page' }"
-        div data-bind='pageFade: $root.current_page() === page.name && page.ready'
-          div data-bind='template: { if: page.ready, name: page.name, data: page.model }'
+        div data-bind='pageFade: $root.current_page() && $root.current_page().id === page.id && page.ready'
+          div data-bind='template: { if: page.ready, name: page.id, data: page.model }'
 
     script id=params[:page] type='text/html'
       == render_template params[:page]

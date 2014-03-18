@@ -25,6 +25,7 @@ define([
         EntityList.prototype.model = config.model;
         EntityList.prototype.list_model = EntityList;
         EntityList.prototype.list_url = '/' + EntityList.plural_name;
+        EntityList.prototype.new_url = '/' + EntityList.plural_name + '/new';
 
         EntityList.get = function (uri) {
             return EntityList.create({

@@ -20,7 +20,7 @@ define([
     };
 
     ShowCocktail.prototype.refresh = function (params) {
-        var cocktail = Cocktail.get(params.id);
+        var cocktail = Cocktail.get(params.cocktail_id);
         if (cocktail.loaded) {
             this.cocktail(cocktail);
             cocktail.refresh();

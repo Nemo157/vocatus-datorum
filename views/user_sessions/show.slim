@@ -1,0 +1,5 @@
+.container data-bind='with: user_session'
+  .row
+    .col-md-12
+      .page-header
+        h1 data-bind="text: $root.user().email() + ' - ' + client_id()"

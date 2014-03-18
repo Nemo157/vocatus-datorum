@@ -16,6 +16,7 @@ define([
         },
         init: function () {
             this.new_recipe_url = ko.computed(_.bind(_.template('/${model.plural_name}/${id()}/recipes/new'), _, this));
+            this.edit_url = ko.computed(_.bind(_.template('/${model.plural_name}/${id()}/edit'), _, this));
         },
         afterRefresh: function () {
             return this.recipes && this.recipes.refresh();

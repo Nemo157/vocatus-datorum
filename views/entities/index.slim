@@ -1,18 +1,19 @@
-.container
+.container data-bind='with: entities'
   .row
     .col-md-12
       .page-header
-        h1 data-bind='text: title'
-        == ko 'if: $root.current_user.can_edit'
-          .pull-right
-            a.btn.btn-primary href='new'
-              span.glyphicon.glyphicon-plus
+        h1
+          span data-bind='text: $parent.title'
+          == ko 'if: $root.user().can_edit'
+            .pull-right
+              a.btn.btn-primary data-bind='attr: { href: new_url }'
+                span.glyphicon.glyphicon-plus
   .row
     .col-md-12
       = slim :'shared/notice'
   .row
     .col-md-12
-      .list-group.media data-bind="foreach: entities() && entities().items"
+      .list-group.media data-bind='foreach: items'
         a.list-group-item.media data-bind='attr: { href: url }'
           img.img-thumbnail.img-responsive.media-object.pull-left data-bind='attr: { src: image_url }' style='width: 64px'
           .media-body

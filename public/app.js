@@ -6,7 +6,10 @@ define([
     'knockout.validation',
     'require',
     'bootstrap',
-    'router'
+    'router',
+    'jquery.cookie',
+    'models/user_sessions',
+    'models/user'
 ], function (
     _,
     $,
@@ -14,7 +17,10 @@ define([
     validation,
     require,
     bootstrap,
-    router
+    router,
+    cookie,
+    UserSessions,
+    User
 ) {
     validation.init({
         insertMessages: false,
@@ -26,27 +32,55 @@ define([
     var app = {
         pages: ko.observableArray(),
         current_page: ko.observable(),
-        current_user: {
+        last_page: ko.observable(),
+        user: ko.observable({
+            email: ko.observable(),
             logged_in: ko.observable(false),
             can_edit: ko.observable(false)
+        }),
+        session: ko.observable(),
+        logout: function () {
+            if (this.session()) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: this.session().uri()
+                });
+                if (this.current_page().id === 'user_sessions-show') {
+                    var pageHolder = _.find(this.pages(), { id: 'user_sessions-show' });
+                    if (pageHolder.params.user_session_id === this.session().id()) {
+                        router.redirect('/');
+                    }
+                }
+                this.session(null);
+                this.user({
+                    email: ko.observable(),
+                    logged_in: ko.observable(false),
+                    can_edit: ko.observable(false)
+                });
+            }
         },
-        goToPage: function (page, params) {
-            var name = page.replace(/\//g, '-');
-            var pageHolder = _.find(this.pages(), { name: name });
+        goToPage: function (path, params, originalPath) {
+            this.last_page(this.current_page());
+            var id = path.replace(/\//g, '-');
+            var pageHolder = _.find(this.pages(), { id: id });
             if (pageHolder) {
                 pageHolder.params = params;
                 if (pageHolder.model() && pageHolder.model().refresh) {
                     pageHolder.model().refresh(params);
                 }
             } else {
-                this.loadPage(page, name, params);
+                this.loadPage(path, id, params);
             }
-            this.current_page(name);
+            this.current_page({
+                id: id,
+                path: path,
+                originalPath: originalPath
+            });
         },
-        loadPage: function (page, name, params) {
+        loadPage: function (path, id, params) {
             var pageHolder = {
-                name: name,
-                templateLoaded: ko.observable($('#' + name).length > 0),
+                id: id,
+                templateLoaded: ko.observable($('#' + id).length > 0),
                 model: ko.observable(),
                 params: params
             };
@@ -57,41 +91,42 @@ define([
                 return pageHolder.loaded() && (!pageHolder.model().ready || pageHolder.model().ready());
             });
             if (!pageHolder.templateLoaded()) {
-                require(['text!templates/' + page + '.html'], _.bind(this.pageTemplateLoaded, this, pageHolder), _.bind(this.pageTemplateLoadFailed, this, pageHolder));
+                require(['text!templates/' + path + '.html'], _.bind(this.pageTemplateLoaded, this, pageHolder), _.bind(this.pageTemplateLoadFailed, this, pageHolder));
             }
-            require(['pages/' + page], _.bind(this.pageModelLoaded, this, pageHolder), _.bind(this.pageModelLoadFailed, this, pageHolder));
+            require(['pages/' + path], _.bind(this.pageModelLoaded, this, pageHolder), _.bind(this.pageModelLoadFailed, this, pageHolder));
             this.pages.push(pageHolder);
         },
         pageModelLoaded: function (pageHolder, pageModel) {
             if (pageModel && pageModel.refresh) {
                 pageModel.refresh(pageHolder.params);
             }
+            pageModel.app = this;
             pageHolder.model(pageModel);
         },
         pageTemplateLoaded: function (pageHolder, pageTemplate) {
             if (_.isString(pageTemplate)) {
-                $('body').append($('<script>').attr({ id: pageHolder.name, type: 'text/html' }).text(pageTemplate));
+                $('body').append($('<script>').attr({ id: pageHolder.id, type: 'text/html' }).text(pageTemplate));
             }
             pageHolder.templateLoaded(true);
         },
         pageModelLoadFailed: function (pageHolder, error) {
-            console.log("Failed to load model for page " + pageHolder.name + ", using an empty one");
+            console.log("Failed to load model for page " + pageHolder.id + ", using an empty one");
             console.log(error);
             this.pageModelLoaded(pageHolder, {});
         },
         pageTemplateLoadFailed: function (pageHolder, error) {
             if (true /* in development */) {
-                console.log("Failed to load template for page " + pageHolder.name + ", injecting error message");
+                console.log("Failed to load template for page " + pageHolder.id + ", injecting error message");
                 console.log(error);
                 var message = error.toString();
-                var wrapped = '<div class="container"><div class="alert alert-danger"><strong>Error loading template for page ' + pageHolder.name + ':</strong> ' + message + '</div></div>';
+                var wrapped = '<div class="container"><div class="alert alert-danger"><strong>Error loading template for page ' + pageHolder.id + ':</strong> ' + message + '</div></div>';
                 if (error.xhr) {
                     this.pageTemplateLoaded(pageHolder, wrapped + error.xhr.responseText);
                 } else {
                     this.pageTemplateLoaded(pageHolder, wrapped);
                 }
             } else {
-                console.log("Failed to load template for page " + pageHolder.name + ", using an empty one");
+                console.log("Failed to load template for page " + pageHolder.id + ", using an empty one");
                 console.log(error);
                 this.pageTemplateLoaded(pageHolder, '');
             }
@@ -188,6 +223,28 @@ define([
             }
         };
     })();
+
+    if ($.cookie('session_id')) {
+        var session_id = $.cookie('session_id');
+        UserSessions.get().refresh().done(function (sessions) {
+            var session = _.find(sessions.items(), function (session) {
+                return session.client_id() === session_id;
+            });
+            if (session) {
+                app.session(session);
+                var user = User.create({ uri: session.user.uri });
+                user.refresh().done(app.user);
+            }
+        });
+    }
+
+    app.session.subscribe(function (session) {
+        if (session && session.client_id()) {
+            $.cookie('session_id', session.client_id());
+        } else {
+            $.removeCookie('session_id');
+        }
+    });
 
     router.setApp(app);
     router.run();

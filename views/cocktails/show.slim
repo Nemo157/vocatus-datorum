@@ -6,7 +6,7 @@
           a> data-bind='attr: { href: list_url }' Cocktails
           | -
           span< data-bind='text: name'
-          == ko 'if: $root.current_user.can_edit'
+          == ko 'if: $root.user().can_edit'
             .pull-right
               a.btn.btn-primary data-bind='attr: { href: edit_url }'
                 span.glyphicon.glyphicon-pencil
@@ -24,11 +24,11 @@
       .col-md-12
         h3
           | Recipes
-          == ko 'if: $root.current_user.can_edit'
+          == ko 'if: $root.user().can_edit'
             .pull-right
               a.btn.btn-link data-bind='attr: { href: new_recipe_url }'
                 span.glyphicon.glyphicon-plus.text-primary
-      == ko 'if: $root.current_user.can_edit'
+      == ko 'if: $root.user().can_edit'
         == ko 'if: recipes && recipes.items().length === 0'
           .col-sm-12
             .alert.alert-info

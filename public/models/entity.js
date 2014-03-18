@@ -11,8 +11,11 @@ define([
 ) {
     var EntityType = function (config) {
         var Entity = function (data) {
+            this.id = ko.observable();
             this.onLoad(false, data);
-            this.url = ko.computed(_.bind(_.template('${root}/${plural_name}/${id()}'), _, this));
+            this.url = ko.computed(function () {
+                return this.id() && _.template('${root}/${plural_name}/${id()}', this);
+            }, this);
             if (config.init && config.init.call) {
                 config.init.call(this);
             }

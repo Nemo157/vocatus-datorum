@@ -20,7 +20,7 @@ module Vocatus
     class UserSession
       include BaseEntity
 
-      property :client_id, UUID, writer: :protected, required: true, default: -> { SecureRandom.uuid }
+      property :client_id, UUID, writer: :protected, required: true, default: -> model, property { SecureRandom.uuid }
 
       belongs_to :user
     end

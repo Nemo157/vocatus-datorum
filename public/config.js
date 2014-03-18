@@ -54,6 +54,10 @@
             'knockout-bootstrap': choose(
                 '//rawgithub.com/billpull/knockout-bootstrap/master/build/knockout-bootstrap.min',
                 '//rawgithub.com/billpull/knockout-bootstrap/master/src/knockout-bootstrap'
+            ),
+            'jquery.cookie': choose(
+                '//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min',
+                '//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie'
             )
         },
         map: {
