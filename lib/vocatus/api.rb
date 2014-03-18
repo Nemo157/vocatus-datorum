@@ -1,9 +1,32 @@
 require 'gipan'
 require 'abstract'
 require 'vocatus/entity'
+require 'securerandom'
 
 module Vocatus
   module Datorum
+    class User
+      include BaseEntity
+
+      property :email, String, required: true, unique: true
+
+      has n, :user_sessions
+
+      class << self
+        attr_accessor :current_user
+      end
+    end
+
+    class UserSession
+      include BaseEntity
+
+      property :client_id, UUID, writer: :protected, required: true, default: -> { SecureRandom.uuid }
+
+      belongs_to :user
+    end
+
+    Entity.user_class = User
+
     class Ingredient
       include Entity
       include GipAN::Abstract
@@ -60,6 +83,9 @@ module Vocatus
       resource Ingredient
       resource Spirit
       resource Mixer
+
+      resource User
+      resource UserSession
 
       enable :logging
 
