@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Nemo157/gipan.git
-  revision: 63024f4cd149ee35d84230a8510cb730ec715c98
+  revision: 408ab1b52ddc09688b67e723fb0baedc73fdd212
   specs:
     gipan (0.1.0)
       data_mapper (~> 1.2.0)
