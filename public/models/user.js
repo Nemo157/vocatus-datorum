@@ -13,8 +13,13 @@ define([
             user_sessions: UserSessions.mapping
         },
         init: function () {
-            this.logged_in = ko.observable(true);
-            this.can_edit = ko.observable(true);
+            this.email = ko.observable();
+            this.logged_in = ko.computed(function () {
+                return !!this.id();
+            }, this);
+            this.can_edit = ko.computed(function () {
+                return this.logged_in();
+            }, this);
         }
     });
 });

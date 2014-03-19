@@ -21,7 +21,7 @@ define([
 
     ShowUserSession.prototype.refresh = function (params) {
         var user_session = UserSession.get(params.user_session_id);
-        if (user_session.loaded) {
+        if (user_session.loaded()) {
             this.user_session(user_session);
             user_session.refresh();
         } else {

@@ -12,7 +12,10 @@ define([
     var EntityType = function (config) {
         var Entity = function (data) {
             this.id = ko.observable();
-            this.onLoad(false, data);
+            this.loaded = ko.observable();
+            if (data) {
+                this.onLoad(false, data);
+            }
             this.url = ko.computed(function () {
                 return this.id() && _.template('${root}/${plural_name}/${id()}', this);
             }, this);

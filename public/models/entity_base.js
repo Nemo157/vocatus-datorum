@@ -30,7 +30,11 @@ define([
             Entity.prototype.list_url = '/' + Entity.plural_name;
 
             Entity.prototype.refresh = function () {
-                return when($.get(this.uri())).then(_.bind(this.onLoad, this, true));
+                if (this.uri()) {
+                    return when($.get(this.uri())).then(_.bind(this.onLoad, this, true));
+                } else {
+                    return when(false);
+                }
             };
 
             Entity.prototype.onLoad = function (loaded, data) {
@@ -38,11 +42,11 @@ define([
                 if (config.afterRefresh) {
                     var self = this;
                     return when(config.afterRefresh.call(this)).then(function () {
-                        self.loaded = self.loaded || loaded;
+                        self.loaded(self.loaded() || loaded);
                         return self;
                     });
                 } else {
-                    this.loaded = this.loaded || loaded;
+                    this.loaded(this.loaded() || loaded);
                     return this;
                 }
             };
@@ -68,7 +72,7 @@ define([
                         EntityBase.cache(config.name, uri, entity);
                     });
                 }
-                entity.loaded = entity.loaded || loaded;
+                entity.loaded(entity.loaded() || loaded);
                 return entity;
             };
 

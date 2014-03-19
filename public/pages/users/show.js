@@ -21,7 +21,7 @@ define([
 
     ShowUser.prototype.refresh = function (params) {
         var user = User.get(params.user_id);
-        if (user.loaded) {
+        if (user.loaded()) {
             this.user(user);
             user.refresh();
         } else {

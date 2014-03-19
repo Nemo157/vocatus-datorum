@@ -21,7 +21,7 @@ define([
 
     ShowCocktail.prototype.refresh = function (params) {
         var cocktail = Cocktail.get(params.cocktail_id);
-        if (cocktail.loaded) {
+        if (cocktail.loaded()) {
             this.cocktail(cocktail);
             cocktail.refresh();
         } else {

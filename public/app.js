@@ -35,11 +35,7 @@ define([
     });
 
     var app = {
-        user: ko.observable({
-            email: ko.observable(),
-            logged_in: ko.observable(false),
-            can_edit: ko.observable(false)
-        }),
+        user: ko.observable(new User()),
         session: ko.observable(),
         logout: function () {
             if (this.session()) {
@@ -54,11 +50,7 @@ define([
                     }
                 }
                 this.session(null);
-                this.user({
-                    email: ko.observable(),
-                    logged_in: ko.observable(false),
-                    can_edit: ko.observable(false)
-                });
+                this.user(new User());
             }
         }
     };
@@ -78,8 +70,9 @@ define([
             });
             if (session) {
                 app.session(session);
-                var user = User.create({ uri: session.user.uri });
-                user.refresh().done(app.user);
+                var user = User.create(session.user);
+                app.user(user);
+                user.refresh();
             }
         });
     }
