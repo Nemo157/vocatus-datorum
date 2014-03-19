@@ -12,7 +12,7 @@ define([
     'models/user',
     'preloader',
     'pager',
-    'fade'
+    'knockout.fade'
 ], function (
     _,
     $,
