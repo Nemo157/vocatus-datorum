@@ -1,34 +1,31 @@
 require 'slim'
 require 'sass'
 require 'sinatra/base'
+require 'vocatus/routes'
 require 'vocatus/slim_helpers'
+require 'vocatus/template_helpers'
 
 module Vocatus
   module Datorum
     class App < Sinatra::Base
       include SlimHelpers
+      include TemplateHelpers
 
       enable :logging
 
       set :root, File.realpath('../../', File.dirname(__FILE__))
 
-      get '/' do
-        params[:page] = :index
-        slim :main
-      end
-
-      get '/:page' do
-        pass if params[:page].include?('.')
-        slim :main
-      end
-
-      get '/:page/*' do
-        pass if params[:splat].first.include?('.')
-        slim :main
-      end
-
       get '/templates/*.html' do
         render_template params[:splat].first
+      end
+
+      get '/routes' do
+        content_type :json
+        Routes.to_json
+      end
+
+      get '/*' do
+        slim :main
       end
     end
   end

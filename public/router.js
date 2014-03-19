@@ -1,59 +1,22 @@
 define([
     'lodash',
     'sammy',
-    'sammy.push_location_proxy'
+    'sammy.push_location_proxy',
+    'json!routes'
 ], function (
     _,
     sammy,
-    PushLocationProxy
+    PushLocationProxy,
+    routes
 ) {
-    var explicitRoutes = {
-        '/': 'index',
-        'cocktails': {
-            '': 'cocktails/index',
-            'new': 'cocktails/new',
-            ':cocktail_id': 'cocktails/show',
-            'recipes': {
-                '': 'recipes/index',
-                'new': 'recipes/new',
-                ':recipe_id': 'recipes/show'
-            }
-        },
-        'ingredients': {
-            '': 'ingredients/index',
-            'new': 'ingredients/new',
-            ':ingredient_id': 'ingredients/show'
-        },
-        'spirits': {
-            '': 'spirits/index',
-            'new': 'spirits/new',
-            ':spirit_id': 'spirits/show'
-        },
-        'mixers': {
-            '': 'mixers/index',
-            'new': 'mixers/new',
-            ':mixer_id': 'mixers/show'
-        },
-        'users': {
-            '': 'users/index',
-            'new': 'users/new',
-            ':user_id': 'users/show'
-        },
-        'sessions': {
-            '': 'user_sessions/index',
-            'new': 'user_sessions/new',
-            ':user_session_id': 'user_sessions/show'
-        },
-        'register': 'users/new',
-        'login': 'user_sessions/new',
-        'user': {
-            route: 'users/show',
+
+    var route_helpers = {
+        '/user': {
             params: function (app) {
                 return { user_id: app.user().id() };
             }
         },
-        'session': {
-            route: 'user_sessions/show',
+        '/session': {
             params: function (app) {
                 return { user_session_id: app.session().id() };
             }
@@ -65,22 +28,25 @@ define([
 
         var mapRoutes = _.bind(function (root, routes) {
             _.forEach(routes, function (map, route) {
+                var fullRoute = (root + (route && ('/' + route))) || '/';
                 if (_.isString(map)) {
-                    this.get(root + (route && route !== '/' ? '/' + route : route), function () {
-                        this.app.app.goToPage(map, this.params, this.path);
-                    });
-                } else if (_.isPlainObject(map) && _.has(map, 'route') && _.has(map, 'params')) {
-                    this.get(root + (route && route !== '/' ? '/' + route : route), function () {
-                        var params = _.isPlainObject(map.params) ? map.params : _.isFunction(map.params) ? map.params(this.app.app) : this.params;
-                        this.app.app.goToPage(map.route, params, this.path);
-                    });
+                    if (_.has(route_helpers, fullRoute)) {
+                        this.get(fullRoute, function () {
+                            var params = _.isPlainObject(route_helpers[fullRoute].params) ? route_helpers[fullRoute].params : _.isFunction(route_helpers[fullRoute].params) ? route_helpers[fullRoute].params(this.app.app) : this.params;
+                            this.app.app.goToPage(map, params, this.path);
+                        });
+                    } else {
+                        this.get(fullRoute, function () {
+                            this.app.app.goToPage(map, this.params, this.path);
+                        });
+                    }
                 } else {
                     mapRoutes(root + '/' + route, map);
                 }
             }, this);
         }, this);
 
-        mapRoutes('', explicitRoutes);
+        mapRoutes('', routes);
 
         this.get('/:page', function () {
             this.app.app.goToPage(this.params.page, this.params, this.path);

@@ -23,7 +23,7 @@ html
         div data-bind='pageFade: $root.current_page() && $root.current_page().id === page.id && page.ready'
           div data-bind='template: { if: page.ready, name: page.id, data: page.model }'
 
-    script id=params[:page] type='text/html'
-      == render_template params[:page]
+    script id=map_template(request.path_info).gsub('/', '-') type='text/html'
+      == render_template map_template(request.path_info)
 
     script src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='/config'
