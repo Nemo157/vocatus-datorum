@@ -25,6 +25,7 @@ module Vocatus
       end
 
       get '/*' do
+        pass if params[:splat].first.include? '.' # normal pages will never have periods, it's probably a js file
         slim :main
       end
     end
