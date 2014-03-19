@@ -80,7 +80,8 @@
         },
         shim: {
             bootstrap: {
-                deps: ['jquery']
+                deps: ['jquery'],
+                exports: '$'
             },
             'knockout-bootstrap': {
                 deps: ['bootstrap', 'jquery']
@@ -88,8 +89,10 @@
             jStorage: {
                 exports: '$.jStorage'
             }
-        }
+        },
+        enforceDefine: true
     });
 
-    require(['/app.js']);
+    define(['app', 'pages/' + document.getElementById('require').dataset.page], function () {
+    });
 })();
