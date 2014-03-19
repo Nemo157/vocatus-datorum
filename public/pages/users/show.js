@@ -19,11 +19,13 @@ define([
         }, this);
     };
 
-    ShowUser.prototype.refresh = function (params) {
+    ShowUser.prototype.refresh = function (params, forceRefresh) {
         var user = User.get(params.user_id);
         if (user.loaded()) {
             this.user(user);
-            user.refresh();
+            if (forceRefresh) {
+                user.refresh();
+            }
         } else {
             this.user(null);
             user.refresh().then(this.user);

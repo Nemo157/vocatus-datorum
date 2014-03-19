@@ -23,9 +23,11 @@ define([
         }, this);
     };
 
-    EntitiesPage.prototype.refresh = function () {
+    EntitiesPage.prototype.refresh = function (params, forceRefresh) {
         if (this.entities()) {
-            this.entities().refresh();
+            if (forceRefresh) {
+                this.entities().refresh();
+            }
         } else {
             this.model.get().refresh().then(this.entities);
         }

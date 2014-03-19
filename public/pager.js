@@ -6,12 +6,12 @@ define(['lodash', 'jquery', 'knockout'], function ( _, $, ko) {
         this.last_page = ko.observable();
     };
 
-    Pager.prototype.ensurePageLoaded = function (id, path, params) {
+    Pager.prototype.ensurePageLoaded = function (id, path, params, forceRefresh) {
         var pageHolder = _.find(this.pages(), { id: id });
         if (pageHolder) {
             pageHolder.params = params;
             if (pageHolder.model() && pageHolder.model().refresh) {
-                pageHolder.model().refresh(params);
+                pageHolder.model().refresh(params, forceRefresh);
             }
         } else {
             this.loadPage(path, id, params);
@@ -20,7 +20,7 @@ define(['lodash', 'jquery', 'knockout'], function ( _, $, ko) {
 
     Pager.prototype.goToPage = function (path, params, originalPath) {
         var id = path.replace(/\//g, '-');
-        this.ensurePageLoaded(id, path, params);
+        this.ensurePageLoaded(id, path, params, true);
         this.last_page(this.currentPage());
         this.currentPage({
             id: id,

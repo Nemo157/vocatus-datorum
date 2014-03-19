@@ -19,11 +19,13 @@ define([
         }, this);
     };
 
-    ShowCocktail.prototype.refresh = function (params) {
+    ShowCocktail.prototype.refresh = function (params, forceRefresh) {
         var cocktail = Cocktail.get(params.cocktail_id);
         if (cocktail.loaded()) {
             this.cocktail(cocktail);
-            cocktail.refresh();
+            if (forceRefresh) {
+                cocktail.refresh();
+            }
         } else {
             this.cocktail(null);
             cocktail.refresh().then(this.cocktail);

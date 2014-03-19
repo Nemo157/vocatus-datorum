@@ -19,11 +19,13 @@ define([
         }, this);
     };
 
-    ShowUserSession.prototype.refresh = function (params) {
+    ShowUserSession.prototype.refresh = function (params, forceRefresh) {
         var user_session = UserSession.get(params.user_session_id);
         if (user_session.loaded()) {
             this.user_session(user_session);
-            user_session.refresh();
+            if (forceRefresh) {
+                user_session.refresh();
+            }
         } else {
             this.user_session(null);
             user_session.refresh().then(this.user_session);
