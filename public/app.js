@@ -10,6 +10,7 @@ define([
     'jquery.cookie',
     'models/user_sessions',
     'models/user',
+    'preloader',
     'fade'
 ], function (
     _,
@@ -21,7 +22,8 @@ define([
     router,
     cookie,
     UserSessions,
-    User
+    User,
+    Preloader
 ) {
     validation.init({
         insertMessages: false,
@@ -60,9 +62,7 @@ define([
                 });
             }
         },
-        goToPage: function (path, params, originalPath) {
-            this.last_page(this.current_page());
-            var id = path.replace(/\//g, '-');
+        ensurePageLoaded: function (id, path, params) {
             var pageHolder = _.find(this.pages(), { id: id });
             if (pageHolder) {
                 pageHolder.params = params;
@@ -72,6 +72,11 @@ define([
             } else {
                 this.loadPage(path, id, params);
             }
+        },
+        goToPage: function (path, params, originalPath) {
+            var id = path.replace(/\//g, '-');
+            this.ensurePageLoaded(id, path, params);
+            this.last_page(this.current_page());
             this.current_page({
                 id: id,
                 path: path,
@@ -158,6 +163,8 @@ define([
 
     router.setApp(app);
     router.run();
+
+    app.preloader = new Preloader(router, app);
 
     ko.applyBindings(app);
     $('body').removeClass('loading');

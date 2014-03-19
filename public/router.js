@@ -26,30 +26,44 @@ define([
     var router = sammy(function() {
         this.setLocationProxy(new PushLocationProxy(this));
 
+        this.map = {};
         var mapRoutes = _.bind(function (root, routes) {
             _.forEach(routes, function (map, route) {
                 var fullRoute = (root + (route && ('/' + route))) || '/';
                 if (_.isString(map)) {
-                    if (_.has(route_helpers, fullRoute)) {
-                        this.get(fullRoute, function () {
-                            var params = _.isPlainObject(route_helpers[fullRoute].params) ? route_helpers[fullRoute].params : _.isFunction(route_helpers[fullRoute].params) ? route_helpers[fullRoute].params(this.app.app) : this.params;
-                            this.app.app.goToPage(map, params, this.path);
-                        });
-                    } else {
-                        this.get(fullRoute, function () {
-                            this.app.app.goToPage(map, this.params, this.path);
-                        });
-                    }
+                    this.get(fullRoute, function () {
+                        this.app.app.goToPage(map, this.app.getParams(this.path, this.params), this.path);
+                    });
+                    _.last(this.routes.get).fullRoute = fullRoute;
+                    this.map[fullRoute] = map;
                 } else {
                     mapRoutes(root + '/' + route, map);
                 }
             }, this);
         }, this);
 
+        this.getPage = function (route, params) {
+            return route.fullRoute ? this.map[route.fullRoute] : params.page;
+        };
+
+        this.getParams = function (path, params) {
+            if (route_helpers[path]) {
+                if (_.isPlainObject(route_helpers[path].params)) {
+                    return route_helpers[path].params;
+                } else if (_.isFunction(route_helpers[path].params)) {
+                    return route_helpers[path].params(this.app);
+                } else {
+                    return params;
+                }
+            } else {
+                return params;
+            }
+        };
+
         mapRoutes('', routes);
 
         this.get('/:page', function () {
-            this.app.app.goToPage(this.params.page, this.params, this.path);
+            this.app.app.goToPage(this.params.page, this.app.getParams(this.path, this.params), this.path);
         });
 
         this.setApp = function (app) {

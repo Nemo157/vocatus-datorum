@@ -26,4 +26,4 @@ html
     script id=map_template(request.path_info).gsub('/', '-') type='text/html'
       == render_template map_template(request.path_info)
 
-    script id='require' src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='config' data-page=map_template(request.path_info)
+    script id='require' src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js' data-main='/config' data-page='#{map_template(request.path_info)}'
