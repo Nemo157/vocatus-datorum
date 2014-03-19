@@ -32,7 +32,7 @@ define([
                 var fullRoute = (root + (route && ('/' + route))) || '/';
                 if (_.isString(map)) {
                     this.get(fullRoute, function () {
-                        this.app.app.goToPage(map, this.app.getParams(this.path, this.params), this.path);
+                        this.app.pager.goToPage(map, this.app.getParams(this.path, this.params), this.path);
                     });
                     _.last(this.routes.get).fullRoute = fullRoute;
                     this.map[fullRoute] = map;
@@ -63,11 +63,15 @@ define([
         mapRoutes('', routes);
 
         this.get('/:page', function () {
-            this.app.app.goToPage(this.params.page, this.app.getParams(this.path, this.params), this.path);
+            this.app.pager.goToPage(this.params.page, this.app.getParams(this.path, this.params), this.path);
         });
 
         this.setApp = function (app) {
             this.app = app;
+        };
+
+        this.setPager = function (pager) {
+            this.pager = pager;
         };
 
         this.redirect = function (new_location) {
