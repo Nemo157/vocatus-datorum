@@ -9,7 +9,8 @@ define([
     'router',
     'jquery.cookie',
     'models/user_sessions',
-    'models/user'
+    'models/user',
+    'fade'
 ], function (
     _,
     $,
@@ -132,97 +133,6 @@ define([
             }
         }
     };
-
-    (function () {
-        var previousPage, nextPage, nextBindingContext, transitioning;
-        var pageFadeDataKey = ko.utils.domData.nextKey();
-
-        var fade = function (element) {
-            if (!transitioning) {
-                var data = ko.utils.domData.get(element, pageFadeDataKey);
-                transitioning = true;
-                data.isDisplayed = false;
-                // This only works because of the defer below.
-                $(element).fadeOut(nextPage ? 'fast' : 'slow', onFaded);
-            }
-        };
-
-        var show = function (element, bindingContext) {
-            if (!transitioning) {
-                transitioning = true;
-                var data = ko.utils.domData.get(element, pageFadeDataKey);
-                if (!data.isBound) {
-                    if (data.savedNodes) {
-                        ko.virtualElements.setDomNodeChildren(element, ko.utils.cloneNodes(data.savedNodes));
-                    }
-                    ko.applyBindingsToDescendants(bindingContext, element);
-                    data.isBound = true;
-                }
-                data.isDisplayed = true;
-                // Give the page more time to load on first show.
-                $(element).fadeIn(data.beenShown ? 'fast' : 'slow', onShown);
-                data.beenShown = true;
-            }
-        };
-
-        var onFaded = function () {
-            var data = ko.utils.domData.get(this, pageFadeDataKey);
-            transitioning = false;
-            if (!data.savedNodes) {
-                data.savedNodes = ko.utils.cloneNodes(ko.virtualElements.childNodes(this), true);
-            }
-            ko.virtualElements.emptyNode(this);
-            data.isBound = false;
-            if (nextPage) {
-                show(nextPage, nextBindingContext);
-            }
-        };
-
-        var onShown = function () {
-            transitioning = false;
-            previousPage = this;
-            if (this === nextPage) {
-                nextPage = null;
-            } else {
-                fade(this);
-            }
-        };
-
-        ko.bindingHandlers.pageFade = {
-            init: function(element, valueAccessor) {
-                var shouldDisplay = ko.utils.unwrapObservable(valueAccessor());
-                $(element).toggle(shouldDisplay);
-                ko.utils.domData.set(element, pageFadeDataKey, {});
-                return { 'controlsDescendantBindings': true };
-            },
-            update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-                var data = ko.utils.domData.get(element, pageFadeDataKey);
-                var shouldDisplay = ko.utils.unwrapObservable(valueAccessor());
-
-                if (shouldDisplay !== data.isDisplayed) {
-                    if (shouldDisplay) {
-                        nextPage = element;
-                        nextBindingContext = bindingContext;
-                        if (data.savedNodes) {
-                            ko.virtualElements.setDomNodeChildren(element, ko.utils.cloneNodes(data.savedNodes));
-                        }
-                        ko.applyBindingsToDescendants(bindingContext, element);
-                        data.isBound = true;
-                        if (previousPage) {
-                            fade(previousPage);
-                        } else {
-                            show(element, bindingContext);
-                        }
-                    } else {
-                        // Ensures the new page being shown will have higher
-                        // priority so we can adjust the fade speed depending
-                        // on whether there is a new page or not.
-                        _.defer(function() { fade(element); });
-                    }
-                }
-            }
-        };
-    })();
 
     if ($.cookie('session_id')) {
         var session_id = $.cookie('session_id');
