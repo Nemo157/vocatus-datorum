@@ -20,7 +20,7 @@ define([
     validation,
     require,
     bootstrap,
-    router,
+    Router,
     cookie,
     UserSessions,
     User,
@@ -47,10 +47,10 @@ define([
                     type: 'DELETE',
                     url: this.session().uri()
                 });
-                if (this.current_page().id === 'user_sessions-show') {
-                    var pageHolder = _.find(this.pages(), { id: 'user_sessions-show' });
+                if (this.pager.currentPage().id === 'user_sessions-show') {
+                    var pageHolder = _.find(this.pager.pages(), { id: 'user_sessions-show' });
                     if (pageHolder.params.user_session_id === this.session().id()) {
-                        router.redirect('/');
+                        this.router.redirect('/');
                     }
                 }
                 this.session(null);
@@ -67,7 +67,8 @@ define([
         log: _.bind(console.log, console)
     };
     app.pager = new Pager(app.logger);
-    app.preloader = new Preloader(router, app.pager);
+    app.router = new Router(app, app.pager);
+    app.preloader = new Preloader(app.router, app.pager);
 
     if ($.cookie('session_id')) {
         var session_id = $.cookie('session_id');
@@ -91,9 +92,7 @@ define([
         }
     });
 
-    router.setApp(app);
-    router.setPager(app.pager);
-    router.run();
+    app.router.run();
 
     ko.applyBindings(app);
     $('body').removeClass('loading');

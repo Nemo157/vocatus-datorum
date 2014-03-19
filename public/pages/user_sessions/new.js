@@ -3,7 +3,7 @@ define([
     'lodash',
     'knockout',
     'knockout.validation',
-    'router',
+    'app',
     'models/users',
     'models/user_session'
 ], function (
@@ -11,7 +11,7 @@ define([
     _,
     ko,
     validation,
-    router,
+    app,
     UserList,
     UserSession
 ) {
@@ -31,9 +31,9 @@ define([
                         contentType: 'application/json',
                         processData: false
                     }).done(function (data) {
-                        loginPage().app.user(user);
-                        loginPage().app.session(UserSession.create(data));
-                        router.redirect(loginPage().app.last_page().originalPath || '/');
+                        app.user(user);
+                        app.session(UserSession.create(data));
+                        app.router.redirect((app.pager.last_page() && app.pager.last_page().originalPath) || '/');
                     });
                 }
             });

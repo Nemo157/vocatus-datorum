@@ -2,14 +2,14 @@ define([
     'jquery',
     'knockout',
     'knockout.validation',
-    'router',
+    'app',
     'models/user',
     'models/user_session'
 ], function (
     $,
     ko,
     validation,
-    router,
+    app,
     User,
     UserSession
 ) {
@@ -33,9 +33,9 @@ define([
                     contentType: 'application/json',
                     processData: false
                 }).done(function (data) {
-                    registerPage().app.user(user);
-                    registerPage().app.session(UserSession.create(data));
-                    router.redirect(registerPage().app.last_page().originalPath || '/');
+                    app.user(user);
+                    app.session(UserSession.create(data));
+                    app.router.redirect((app.pager.last_page().originalPath && app.pager.last_page().originalPath) || '/');
                 });
             });
         }

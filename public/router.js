@@ -5,11 +5,10 @@ define([
     'json!routes'
 ], function (
     _,
-    sammy,
+    Sammy,
     PushLocationProxy,
     routes
 ) {
-
     var route_helpers = {
         '/user': {
             params: function (app) {
@@ -23,65 +22,64 @@ define([
         }
     };
 
-    var router = sammy(function() {
+    var Router = function (app, pager) {
         this.setLocationProxy(new PushLocationProxy(this));
 
+        this.app = app;
+        this.pager = pager;
+
         this.map = {};
-        var mapRoutes = _.bind(function (root, routes) {
-            _.forEach(routes, function (map, route) {
-                var fullRoute = (root + (route && ('/' + route))) || '/';
-                if (_.isString(map)) {
-                    this.get(fullRoute, function () {
-                        this.app.pager.goToPage(map, this.app.getParams(this.path, this.params), this.path);
-                    });
-                    _.last(this.routes.get).fullRoute = fullRoute;
-                    this.map[fullRoute] = map;
-                } else {
-                    mapRoutes(root + '/' + route, map);
-                }
-            }, this);
-        }, this);
-
-        this.getPage = function (route, params) {
-            return route.fullRoute ? this.map[route.fullRoute] : params.page;
-        };
-
-        this.getParams = function (path, params) {
-            if (route_helpers[path]) {
-                if (_.isPlainObject(route_helpers[path].params)) {
-                    return route_helpers[path].params;
-                } else if (_.isFunction(route_helpers[path].params)) {
-                    return route_helpers[path].params(this.app);
-                } else {
-                    return params;
-                }
-            } else {
-                return params;
-            }
-        };
-
-        mapRoutes('', routes);
+        this.mapRoutes('', routes);
 
         this.get('/:page', function () {
             this.app.pager.goToPage(this.params.page, this.app.getParams(this.path, this.params), this.path);
         });
+    };
 
-        this.setApp = function (app) {
-            this.app = app;
-        };
+    Router.prototype = new Sammy.Application();
+    Router.prototype.constructor = Router;
 
-        this.setPager = function (pager) {
-            this.pager = pager;
-        };
+    Router.prototype.redirect = function (newLocation) {
+        var oldLocation = this.getLocation();
+        this.setLocation(newLocation);
+        if (oldLocation !== this.getLocation()) {
+            this.trigger('location-changed');
+        }
+    };
 
-        this.redirect = function (new_location) {
-            var old_location = this.getLocation();
-            this.setLocation(new_location);
-            if (old_location !== this.getLocation()) {
-                this.trigger('location-changed');
+    Router.prototype.mapRoutes = function (root, routes) {
+        _.forEach(routes, function (map, route) {
+            var fullRoute = (root + (route && ('/' + route))) || '/';
+            if (_.isString(map)) {
+                this.get(fullRoute, function () {
+                    this.app.pager.goToPage(map, this.app.getParams(this.path, this.params), this.path);
+                });
+                _.last(this.routes.get).fullRoute = fullRoute;
+                this.map[fullRoute] = map;
+            } else {
+                this.mapRoutes(root + '/' + route, map);
             }
-        };
-    });
+        }, this);
+    };
 
-    return router;
+    Router.prototype.getPage = function (route, params) {
+        return route.fullRoute ? this.map[route.fullRoute] : params.page;
+    };
+
+    Router.prototype.getParams = function (path, params) {
+        if (route_helpers[path]) {
+            if (_.isPlainObject(route_helpers[path].params)) {
+                return route_helpers[path].params;
+            } else if (_.isFunction(route_helpers[path].params)) {
+                return route_helpers[path].params(this.app);
+            } else {
+                return params;
+            }
+        } else {
+            return params;
+        }
+    };
+
+
+    return Router;
 });
