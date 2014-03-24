@@ -96,7 +96,6 @@ define([
         fadeContextDataKey: fadeContextDataKey,
         contexts: contexts,
         init: function (invert, element, valueAccessor) {
-            console.log('init ' + element.innerHTML);
             var value = ko.utils.unwrapObservable(valueAccessor());
             var shouldDisplay = xor(_.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay, invert);
             $(element).toggle(shouldDisplay);
