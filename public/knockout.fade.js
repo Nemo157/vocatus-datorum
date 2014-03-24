@@ -58,13 +58,16 @@ define([
 
     var onShown = function () {
         var data = ko.utils.domData.get(this, fadeDataKey);
-        var context = contexts[data.contextId];
-        context.transitioning = false;
-        context.previousPage = this;
-        if (this === context.nextPage) {
-            context.nextPage = null;
-        } else {
-            fade(this);
+        // data will be null if this element was removed while fading
+        if (data) {
+            var context = contexts[data.contextId];
+            context.transitioning = false;
+            context.previousPage = this;
+            if (this === context.nextPage) {
+                context.nextPage = null;
+            } else {
+                fade(this);
+            }
         }
     };
 
@@ -84,24 +87,36 @@ define([
         return contextId;
     };
 
-    ko.bindingHandlers.fade = {
+    var xor = function (a, b) {
+        return (a && !b) || (b && !a);
+    };
+
+    var handler = {
         fadeDataKey: fadeDataKey,
         fadeContextDataKey: fadeContextDataKey,
         contexts: contexts,
-        init: function (element, valueAccessor) {
+        init: function (invert, element, valueAccessor) {
+            console.log('init ' + element.innerHTML);
             var value = ko.utils.unwrapObservable(valueAccessor());
-            var shouldDisplay = _.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay;
+            var shouldDisplay = xor(_.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay, invert);
             $(element).toggle(shouldDisplay);
-            ko.utils.domData.set(element, fadeDataKey, {
+            var data = {
                 contextId: findContextId(element, value)
+            };
+            ko.utils.domData.set(element, fadeDataKey, data);
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                var context = contexts[data.contextId];
+                if (context.previousPage === element) {
+                    context.previousPage = null;
+                }
             });
             return { 'controlsDescendantBindings': true };
         },
-        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+        update: function (invert, element, valueAccessor, allBindings, viewModel, bindingContext) {
             var data = ko.utils.domData.get(element, fadeDataKey);
             var context = contexts[data.contextId];
             var value = ko.utils.unwrapObservable(valueAccessor());
-            var shouldDisplay = _.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay;
+            var shouldDisplay = xor(_.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay, invert);
 
             if (shouldDisplay !== data.isDisplayed) {
                 if (shouldDisplay) {
@@ -127,5 +142,23 @@ define([
         }
     };
 
-    return ko.bindingHandlers.fade;
+    ko.bindingHandlers.fade = {
+        init: function (element, valueAccessor) {
+            return handler.init(false, element, valueAccessor);
+        },
+        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+            return handler.update(false, element, valueAccessor, allBindings, viewModel, bindingContext);
+        }
+    };
+
+    ko.bindingHandlers.fadenot = {
+        init: function (element, valueAccessor) {
+            return handler.init(true, element, valueAccessor);
+        },
+        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+            return handler.update(true, element, valueAccessor, allBindings, viewModel, bindingContext);
+        }
+    };
+
+    return ko.bindingHandlers.handler;
 });
