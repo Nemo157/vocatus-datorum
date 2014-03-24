@@ -1,36 +1,12 @@
 define([
-    'lodash',
-    'jquery',
-    'knockout',
-    'knockout.mapping',
+    'pages/entities/show',
     'models/cocktail'
 ], function (
-    _,
-    $,
-    ko,
-    mapping,
+    ShowPage,
     Cocktail
 ) {
-    var ShowCocktail = function () {
-        _.bindAll(this);
-        this.cocktail = ko.observable();
-        this.ready = ko.computed(function () {
-            return !!this.cocktail();
-        }, this);
-    };
-
-    ShowCocktail.prototype.refresh = function (params, forceRefresh) {
-        var cocktail = Cocktail.get(params.cocktail_id);
-        if (cocktail.loaded()) {
-            this.cocktail(cocktail);
-            if (forceRefresh) {
-                cocktail.refresh();
-            }
-        } else {
-            this.cocktail(null);
-            cocktail.refresh().then(this.cocktail);
-        }
-    };
-
-    return new ShowCocktail();
+    return new ShowPage({
+        name: 'cocktail',
+        model: Cocktail
+    });
 });

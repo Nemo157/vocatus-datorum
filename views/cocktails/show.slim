@@ -1,59 +1,62 @@
 .container data-bind='with: cocktail'
-  .row
-    .col-md-12
-      .page-header
-        h1
-          a> data-bind='attr: { href: list_url }' Cocktails
-          | -
-          span< data-bind='text: name'
-          == ko 'if: $root.user().can_edit'
-            .pull-right
-              a.btn.btn-primary data-bind='attr: { href: edit_url }'
-                span.glyphicon.glyphicon-pencil
-              a.btn.btn-danger data-bind='attr: { href: url, "data-confirm": "Are you sure you want to delete " + name + "?" }' data-method='delete'
-                span.glyphicon.glyphicon-trash
-  .row
-    .col-md-12
-      = slim :'shared/notice'
-  .row
-    .col-xs-12.col-sm-3
-      img.img-thumbnail.img-responsive.center-block data-bind='attr: { src: image_url }'
-    .col-sm-9
+  == ko 'if: loaded'
+    .row
       .col-md-12
-        .well data-bind='text: description'
+        .page-header
+          h1
+            a> data-bind='attr: { href: list_url }' Cocktails
+            | -
+            span< data-bind='text: name'
+            == ko 'if: $root.user().can_edit'
+              .pull-right
+                a.btn.btn-primary data-bind='attr: { href: edit_url }'
+                  span.glyphicon.glyphicon-pencil
+                a.btn.btn-danger data-bind='attr: { href: url, "data-confirm": "Are you sure you want to delete " + name + "?" }' data-method='delete'
+                  span.glyphicon.glyphicon-trash
+    .row
       .col-md-12
-        h3
-          | Recipes
-          == ko 'if: $root.user().can_edit'
-            .pull-right
+        = slim :'shared/notice'
+    .row
+      .col-xs-12.col-sm-3
+        img.img-thumbnail.img-responsive.center-block data-bind='attr: { src: image_url }'
+      .col-sm-9
+        .col-md-12
+          .well data-bind='text: description'
+        .col-md-12
+          h3
+            | Recipes
+            span.fa.fa-spin.fa-spinner< data-bind='fadenot: recipes.loaded'
+            .pull-right data-bind='if: $root.user().can_edit'
               a.btn.btn-link data-bind='attr: { href: new_recipe_url }'
                 span.glyphicon.glyphicon-plus.text-primary
-      == ko 'if: $root.user().can_edit'
-        == ko 'if: recipes && recipes.items().length === 0'
-          .col-sm-12
-            .alert.alert-info
-              | None yet, you should
-              a.alert-link<> data-bind='attr: { href: new_recipe_url }' add
-              | one.
-      / - @cocktail.recipes.each do |recipe|
-        .col-sm-12.col-md-6
-          .panel.panel-default
-            .panel-heading
-              .panel-title
-                .row
-                  .col-xs-6
-                    = recipe.name
-                  - if can_edit?
-                    .col-xs-6.text-right
-                      %a.btn.btn-xs.btn-link{ href: edit_cocktail_recipe_path(@cocktail, recipe) }
-                        %span.glyphicon.glyphicon-pencil.text-primary
-                      %a.btn.btn-xs.btn-link{ href: cocktail_recipe_path(@cocktail, recipe), data: { method: :delete, confirm: "Are you sure you want to delete #{recipe.name}?" } }
-                        %span.glyphicon.glyphicon-trash.text-danger
-            .panel-body
-              %ul.list-unstyled
-                - recipe.ingredients.each do |ingredient|
-                  %li
-                    = ingredient.quantity
-                    ml -
-                    %a{ href: url_for(ingredient.ingredient) }
-                      = ingredient.ingredient.name
+        .col-sm-12 data-bind='if: $root.user().can_edit() && recipes.loaded() && recipes.items().length === 0'
+          .alert.alert-info
+            | None yet, you should
+            a.alert-link<> data-bind='attr: { href: new_recipe_url }' add
+            | one.
+        .col-sm-12 data-bind='fade: recipes.loaded'
+          == ko 'foreach: recipes.items'
+            .col-sm-12.col-md-6
+              .panel.panel-default
+                .panel-heading
+                  .panel-title
+                    .row data-bind='fadenot: loaded'
+                      .col-xs-6
+                        span.fa.fa-spin.fa-spinner
+                    .row data-bind='fade: loaded'
+                      .col-xs-6 data-bind='text: name'
+                      .col-xs-6 data-bind="fadenot: { shouldDisplay: ingredients.loaded, context: 'ingredients' }"
+                        span.fa.fa-spin.fa-spinner
+                      .col-xs-6.text-right data-bind='if: $root.user().can_edit'
+                        // a.btn.btn-xs.btn-link data-bind='attr: { href: edit_url }'
+                          span.glyphicon.glyphicon-pencil.text-primary
+                        // a.btn.btn-xs.btn-link data-bind='attr: { href: url }' data-method='delete' data-confirm='Are you sure you want to delete recipe.name?'
+                          span.glyphicon.glyphicon-trash.text-danger
+                .panel-body data-bind="fade: { shouldDisplay: ingredients.loaded, context: 'ingredients' }"
+                  ul.list-unstyled data-bind='foreach: ingredients.items'
+                    li
+                      span.fa.fa-spin.fa-spinner data-bind='fade: !(loaded() && ingredient().loaded())'
+                      span data-bind='fade: loaded() && ingredient().loaded()'
+                        span> data-bind="text: quantity() + 'ml'"
+                        | -
+                        a< data-bind="attr: { href: ingredient().url }, text: ingredient().name()"

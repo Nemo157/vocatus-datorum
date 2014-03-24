@@ -1,3 +1,4 @@
+/* global console */
 define([
     'jquery',
     'lodash',
@@ -40,25 +41,14 @@ define([
             Entity.prototype.onLoad = function (loaded, data) {
                 mapping.fromJS(data, Entity.mapping, this);
                 if (config.afterRefresh) {
-                    var self = this;
-                    return when(config.afterRefresh.call(this)).then(function () {
-                        self.loaded(self.loaded() || loaded);
-                        return self;
-                    });
+                    config.afterRefresh.call(this);
+                    this.loaded(this.loaded() || loaded);
+                    return this;
                 } else {
                     this.loaded(this.loaded() || loaded);
                     return this;
                 }
             };
-
-            Entity.mapping = _.merge({
-                create: function (options) {
-                    return Entity.create(options.data, true);
-                },
-                key: function (data) {
-                    return ko.utils.unwrapObservable(data.uri);
-                }
-            }, config.mapping);
 
             Entity.create = function (data, loaded) {
                 var entity = EntityBase.find(config.name, data.uri);
@@ -68,6 +58,7 @@ define([
                     EntityBase.cache(config.name, uri, entity);
                     entity.uri.subscribe(function () {
                         // We will leave the entity scattered throughout whatever cache locations it's been at.
+                        console.log('WARNING: entity moved uri from ' + uri + ' to ' + entity.uri());
                         uri = entity.uri();
                         EntityBase.cache(config.name, uri, entity);
                     });

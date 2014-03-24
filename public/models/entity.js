@@ -43,6 +43,24 @@ define([
 
         EntityBase.init(Entity, config);
 
+        Entity.mapping = _.merge({
+            create: function (options) {
+                return Entity.create(options.data, true);
+            },
+            key: function (data) {
+                return ko.utils.unwrapObservable(data.uri);
+            }
+        }, config.mapping);
+
+        Entity.observableMapping = _.merge({
+            create: function (options) {
+                return ko.observable(Entity.create(options.data, false));
+            },
+            key: function (data) {
+                return ko.utils.unwrapObservable(ko.utils.unwrapObservable(data).uri);
+            }
+        }, config.mapping);
+
         return Entity;
     };
 

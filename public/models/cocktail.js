@@ -19,7 +19,9 @@ define([
             this.edit_url = ko.computed(_.bind(_.template('/${model.plural_name}/${id()}/edit'), _, this));
         },
         afterRefresh: function () {
-            return this.recipes && this.recipes.refresh();
+            if (this.recipes) {
+                this.recipes.refresh();
+            }
         }
     });
 });

@@ -1,9 +1,19 @@
 define([
-    './entity'
+    './entity',
+    './quantified_ingredients'
 ], function (
-    EntityType
+    EntityType,
+    QuantifiedIngredientList
 ) {
     return new EntityType({
-        name: 'recipe'
+        name: 'recipe',
+        mapping: {
+            ingredients: QuantifiedIngredientList.mapping
+        },
+        afterRefresh: function () {
+            if (this.ingredients) {
+                this.ingredients.refresh();
+            }
+        }
     });
 });

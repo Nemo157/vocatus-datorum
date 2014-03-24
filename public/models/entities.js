@@ -36,7 +36,24 @@ define([
             });
         };
 
+        var afterRefresh = config.afterRefresh;
+        config.afterRefresh = function () {
+            _.invoke(this.items(), 'refresh');
+            if (afterRefresh) {
+                afterRefresh.apply(this);
+            }
+        };
+
         EntityBase.init(EntityList, config);
+
+        EntityList.mapping = _.merge({
+            create: function (options) {
+                return EntityList.create(options.data, false);
+            },
+            key: function (data) {
+                return ko.utils.unwrapObservable(data.uri);
+            }
+        }, config.mapping);
 
         EntityList.mapping.items = config.model.mapping;
 

@@ -1,36 +1,12 @@
 define([
-    'lodash',
-    'jquery',
-    'knockout',
-    'knockout.mapping',
+    'pages/entities/show',
     'models/user'
 ], function (
-    _,
-    $,
-    ko,
-    mapping,
+    ShowPage,
     User
 ) {
-    var ShowUser = function () {
-        _.bindAll(this);
-        this.user = ko.observable();
-        this.ready = ko.computed(function () {
-            return !!this.user();
-        }, this);
-    };
-
-    ShowUser.prototype.refresh = function (params, forceRefresh) {
-        var user = User.get(params.user_id);
-        if (user.loaded()) {
-            this.user(user);
-            if (forceRefresh) {
-                user.refresh();
-            }
-        } else {
-            this.user(null);
-            user.refresh().then(this.user);
-        }
-    };
-
-    return new ShowUser();
+    return new ShowPage({
+        name: 'user',
+        model: User
+    });
 });
