@@ -1,14 +1,13 @@
 define([
     './entity',
-    './ingredient'
+    'models/ingredient'
 ], function (
-    EntityType,
-    Ingredient
+    EntityType
 ) {
     return new EntityType({
         name: 'quantified_ingredient',
         mapping: {
-            ingredient: Ingredient.observableMapping
+            ingredient: 'models/ingredient'
         },
         afterRefresh: function () {
             if (this.ingredient && this.ingredient()) {

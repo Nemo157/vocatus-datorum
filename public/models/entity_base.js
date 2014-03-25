@@ -46,6 +46,8 @@ define([
                     _.forEach(Entity.fullMapping, function (value, key) {
                         if (_.isString(value)) {
                             Entity.fullMapping[key] = require(value).mapping;
+                        } else if (_.isPlainObject(value) && _.has(value, 'model') && _.has(value, 'mapping')) {
+                            Entity.fullMapping[key] = require(value.model)[value.mapping];
                         }
                     });
                 }

@@ -19,9 +19,8 @@ define([
             this.id = ko.observable();
             this.loaded = ko.observable();
             this.onLoad(false, data);
-            this.url = ko.computed(function () {
-                return this.id() && _.template('${root}/${plural_name}/${id()}', this);
-            }, this);
+            this.url = ko.computed(_.bind(_.template('${root}/${plural_name}/${id()}'), _, this));
+            this.edit_url = ko.computed(_.bind(_.template('${url()}/edit'), _, this));
             if (config.init && config.init.call) {
                 config.init.call(this);
             }
@@ -44,7 +43,7 @@ define([
             }, false);
         };
 
-        Entity.mapping = {
+        Entity.nonObservableMapping = {
             create: function (options) {
                 return Entity.create(options.data, true, options.parent);
             },
@@ -53,7 +52,7 @@ define([
             }
         };
 
-        Entity.observableMapping = {
+        Entity.mapping = {
             create: function (options) {
                 var entity = Entity.create(options.data, false, options.parent);
                 return ko.observable(entity).extend({ refresh: entity });

@@ -27,6 +27,10 @@ define([
             }
         };
 
+        if (!_.has(config, 'model')) {
+            config.model = 'models/' + inflector.singularize(config.name);
+        }
+
         EntityList.plural_name = config.name;
         EntityList.singular_name = inflector.singularize(config.name);
 
@@ -66,7 +70,11 @@ define([
         if (!config.mapping) {
             config.mapping = {};
         }
-        config.mapping.items = _.isString(config.model) ? config.model : config.model.mapping;
+
+        config.mapping.items = _.isString(config.model) ? {
+            model: config.model,
+            mapping: 'nonObservableMapping'
+        } : config.model.nonObservableMapping;
 
         EntityBase.init(EntityList, config);
 
