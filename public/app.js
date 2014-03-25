@@ -3,6 +3,7 @@ define([
     'lodash',
     'jquery',
     'knockout',
+    'knockout.mapping',
     'knockout.validation',
     'require',
     'bootstrap',
@@ -17,6 +18,7 @@ define([
     _,
     $,
     ko,
+    mapping,
     validation,
     require,
     bootstrap,
@@ -70,7 +72,7 @@ define([
             });
             if (session) {
                 app.session(session);
-                var user = User.create(session.user);
+                var user = User.create(mapping.toJS(session.user));
                 app.user(user);
                 user.refresh();
             }

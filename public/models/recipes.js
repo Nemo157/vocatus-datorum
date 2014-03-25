@@ -1,12 +1,20 @@
 define([
+    'lodash',
+    'knockout',
     './recipe',
-    './entities'
+    './entities',
+    'models/cocktail'
 ], function (
+    _,
+    ko,
     Recipe,
     EntityListType
 ) {
     return new EntityListType({
         name: 'recipes',
-        model: Recipe
+        model: Recipe,
+        init: function () {
+            this.new_url = ko.computed(_.bind(_.template('${url()}/new'), _, this));
+        }
     });
 });

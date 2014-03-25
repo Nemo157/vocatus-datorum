@@ -1,21 +1,24 @@
 define([
     'lodash',
     'knockout',
+    'knockout.refresh',
+    'knockout.mapping',
     'inflector',
     './entity_base'
 ], function (
     _,
     ko,
+    refresh,
+    mapping,
     inflector,
     EntityBase
 ) {
     var EntityType = function (config) {
-        var Entity = function (data) {
+        var Entity = function (data, owner) {
+            this.owner = ko.observable(owner);
             this.id = ko.observable();
             this.loaded = ko.observable();
-            if (data) {
-                this.onLoad(false, data);
-            }
+            this.onLoad(false, data);
             this.url = ko.computed(function () {
                 return this.id() && _.template('${root}/${plural_name}/${id()}', this);
             }, this);
@@ -27,7 +30,7 @@ define([
         Entity.singular_name = config.name;
         Entity.plural_name = inflector.pluralize(config.name);
 
-        Entity.prototype.singular_name = Entity.name;
+        Entity.prototype.singular_name = Entity.singular_name;
         Entity.prototype.plural_name = Entity.plural_name;
 
         Entity.prototype.root = window.location.protocol + '//' + window.location.host;
@@ -41,25 +44,26 @@ define([
             }, false);
         };
 
-        EntityBase.init(Entity, config);
-
-        Entity.mapping = _.merge({
+        Entity.mapping = {
             create: function (options) {
-                return Entity.create(options.data, true);
+                return Entity.create(options.data, true, options.parent);
             },
             key: function (data) {
                 return ko.utils.unwrapObservable(data.uri);
             }
-        }, config.mapping);
+        };
 
-        Entity.observableMapping = _.merge({
+        Entity.observableMapping = {
             create: function (options) {
-                return ko.observable(Entity.create(options.data, false));
+                var entity = Entity.create(options.data, false, options.parent);
+                return ko.observable(entity).extend({ refresh: entity });
             },
             key: function (data) {
                 return ko.utils.unwrapObservable(ko.utils.unwrapObservable(data).uri);
             }
-        }, config.mapping);
+        };
+
+        EntityBase.init(Entity, config);
 
         return Entity;
     };

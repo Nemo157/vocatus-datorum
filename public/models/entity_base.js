@@ -30,6 +30,8 @@ define([
         init: function (Entity, config) {
             Entity.prototype.list_url = '/' + Entity.plural_name;
 
+            Entity.fullMapping = _.merge(Entity.mapping, config.mapping);
+
             Entity.prototype.refresh = function () {
                 if (this.uri()) {
                     return when($.get(this.uri())).then(_.bind(this.onLoad, this, true));
@@ -38,22 +40,32 @@ define([
                 }
             };
 
-            Entity.prototype.onLoad = function (loaded, data) {
-                mapping.fromJS(data, Entity.mapping, this);
-                if (config.afterRefresh) {
-                    config.afterRefresh.call(this);
-                    this.loaded(this.loaded() || loaded);
-                    return this;
-                } else {
-                    this.loaded(this.loaded() || loaded);
-                    return this;
+            Entity.ensureMappingInitialized = function () {
+                if (!Entity.mappingInitialized) {
+                    Entity.mappingInitialized = true;
+                    _.forEach(Entity.fullMapping, function (value, key) {
+                        if (_.isString(value)) {
+                            Entity.fullMapping[key] = require(value).mapping;
+                        }
+                    });
                 }
             };
 
-            Entity.create = function (data, loaded) {
+            Entity.prototype.onLoad = function (loaded, data) {
+                Entity.ensureMappingInitialized();
+                mapping.fromJS(data || {}, Entity.fullMapping, this);
+                if (loaded) {
+                    this.loaded(true);
+                }
+                return this;
+            };
+
+            Entity.create = function (data, loaded, owner) {
                 var entity = EntityBase.find(config.name, data.uri);
-                if (!entity) {
-                    entity = new Entity(data);
+                if (entity) {
+                    entity.owner(owner);
+                } else {
+                    entity = new Entity(data, owner);
                     var uri = data.uri;
                     EntityBase.cache(config.name, uri, entity);
                     entity.uri.subscribe(function () {

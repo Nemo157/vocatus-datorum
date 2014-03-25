@@ -15,48 +15,12 @@
                   span.glyphicon.glyphicon-trash
     .row
       .col-md-12
-        = slim :'shared/notice'
+        == slim :'shared/notice'
     .row
       .col-xs-12.col-sm-3
         img.img-thumbnail.img-responsive.center-block data-bind='attr: { src: image_url }'
       .col-sm-9
         .col-md-12
           .well data-bind='text: description'
-        .col-md-12
-          h3
-            | Recipes
-            span.fa.fa-spin.fa-spinner< data-bind='fadenot: recipes.loaded'
-            .pull-right data-bind='if: $root.user().can_edit'
-              a.btn.btn-link data-bind='attr: { href: new_recipe_url }'
-                span.glyphicon.glyphicon-plus.text-primary
-        .col-sm-12 data-bind='if: $root.user().can_edit() && recipes.loaded() && recipes.items().length === 0'
-          .alert.alert-info
-            | None yet, you should
-            a.alert-link<> data-bind='attr: { href: new_recipe_url }' add
-            | one.
-        .col-sm-12 data-bind='fade: recipes.loaded'
-          == ko 'foreach: recipes.items'
-            .col-sm-12.col-md-6
-              .panel.panel-default
-                .panel-heading
-                  .panel-title
-                    .row data-bind='fadenot: loaded'
-                      .col-xs-6
-                        span.fa.fa-spin.fa-spinner
-                    .row data-bind='fade: loaded'
-                      .col-xs-6 data-bind='text: name'
-                      .col-xs-6 data-bind="fadenot: { shouldDisplay: ingredients.loaded, context: 'ingredients' }"
-                        span.fa.fa-spin.fa-spinner
-                      .col-xs-6.text-right data-bind='if: $root.user().can_edit'
-                        // a.btn.btn-xs.btn-link data-bind='attr: { href: edit_url }'
-                          span.glyphicon.glyphicon-pencil.text-primary
-                        // a.btn.btn-xs.btn-link data-bind='attr: { href: url }' data-method='delete' data-confirm='Are you sure you want to delete recipe.name?'
-                          span.glyphicon.glyphicon-trash.text-danger
-                .panel-body data-bind="fade: { shouldDisplay: ingredients.loaded, context: 'ingredients' }"
-                  ul.list-unstyled data-bind='foreach: ingredients.items'
-                    li
-                      span.fa.fa-spin.fa-spinner data-bind='fade: !(loaded() && ingredient().loaded())'
-                      span data-bind='fade: loaded() && ingredient().loaded()'
-                        span> data-bind="text: quantity() + 'ml'"
-                        | -
-                        a< data-bind="attr: { href: ingredient().url }, text: ingredient().name()"
+        == ko 'with: recipes'
+          == slim :'cocktails/show/recipes'

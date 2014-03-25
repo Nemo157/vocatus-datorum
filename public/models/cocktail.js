@@ -2,20 +2,18 @@ define([
     'lodash',
     'knockout',
     './entity',
-    './recipes'
+    'models/recipes'
 ], function (
     _,
     ko,
-    EntityType,
-    RecipeList
+    EntityType
 ) {
     return new EntityType({
         name: 'cocktail',
         mapping: {
-            recipes: RecipeList.mapping
+            recipes: 'models/recipes'
         },
         init: function () {
-            this.new_recipe_url = ko.computed(_.bind(_.template('/${model.plural_name}/${id()}/recipes/new'), _, this));
             this.edit_url = ko.computed(_.bind(_.template('/${model.plural_name}/${id()}/edit'), _, this));
         },
         afterRefresh: function () {

@@ -1,0 +1,24 @@
+.col-sm-12.col-md-6
+  .panel.panel-default
+    .panel-heading
+      .panel-title
+        .row data-bind='fadenot: loaded'
+          .col-xs-6
+            span.fa.fa-spin.fa-spinner
+        .row data-bind='fade: loaded'
+          .col-xs-6
+            span data-bind='text: name'
+            span.fa.fa-spin.fa-spinner< data-bind="fadenot: { shouldDisplay: ingredients().loaded, context: 'ingredients' }"
+          .col-xs-6.text-right data-bind='if: $root.user().can_edit'
+            // a.btn.btn-xs.btn-link data-bind='attr: { href: edit_url }'
+              span.glyphicon.glyphicon-pencil.text-primary
+            // a.btn.btn-xs.btn-link data-bind='attr: { href: url }' data-method='delete' data-confirm='Are you sure you want to delete recipe.name?'
+              span.glyphicon.glyphicon-trash.text-danger
+    .panel-body data-bind="fade: { shouldDisplay: ingredients().loaded, context: 'ingredients' }"
+      ul.list-unstyled data-bind='foreach: ingredients().items'
+        li
+          span.fa.fa-spin.fa-spinner data-bind='fade: !(loaded() && ingredient().loaded())'
+          span data-bind='fade: loaded() && ingredient().loaded()'
+            span> data-bind="text: quantity() + 'ml'"
+            | -
+            a< data-bind="attr: { href: ingredient().url }, text: ingredient().name()"

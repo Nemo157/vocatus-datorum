@@ -1,21 +1,27 @@
 define([
     'lodash',
     'knockout',
+    'knockout.refresh',
+    'knockout.mapping',
     'inflector',
     './entity_base'
 ], function (
     _,
     ko,
+    refresh,
+    mapping,
     inflector,
     EntityBase
 ) {
     var EntityListType = function (config) {
-        var EntityList = function (data) {
+        var EntityList = function (data, owner) {
+            this.owner = ko.observable(owner);
             this.items = ko.observableArray();
             this.loaded = ko.observable();
-            if (data) {
-                this.onLoad(false, data);
-            }
+            this.onLoad(false, data);
+            this.url = ko.computed(function () {
+                return this.owner() && _.template('${owner().url()}/${plural_name}', this);
+            }, this);
             if (config.init && config.init.call) {
                 config.init.call(this);
             }
@@ -23,6 +29,9 @@ define([
 
         EntityList.plural_name = config.name;
         EntityList.singular_name = inflector.singularize(config.name);
+
+        EntityList.prototype.singular_name = EntityList.singular_name;
+        EntityList.prototype.plural_name = EntityList.plural_name;
 
         EntityList.prototype.root = window.location.protocol + '//' + window.location.host;
         EntityList.prototype.model = config.model;
@@ -44,18 +53,22 @@ define([
             }
         };
 
-        EntityBase.init(EntityList, config);
-
-        EntityList.mapping = _.merge({
+        EntityList.mapping = {
             create: function (options) {
-                return EntityList.create(options.data, false);
+                var entity = EntityList.create(options.data, false, options.parent);
+                return ko.observable(entity).extend({ refresh: entity });
             },
             key: function (data) {
-                return ko.utils.unwrapObservable(data.uri);
+                return ko.utils.unwrapObservable(ko.utils.unwrapObservable(data).uri);
             }
-        }, config.mapping);
+        };
 
-        EntityList.mapping.items = config.model.mapping;
+        if (!config.mapping) {
+            config.mapping = {};
+        }
+        config.mapping.items = _.isString(config.model) ? config.model : config.model.mapping;
+
+        EntityBase.init(EntityList, config);
 
         return EntityList;
     };

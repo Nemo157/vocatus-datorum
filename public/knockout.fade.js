@@ -91,13 +91,18 @@ define([
         return (a && !b) || (b && !a);
     };
 
+    var getShouldDisplay = function (valueAccessor, invert) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        return xor(_.isBoolean(value) ? value : (_.has(value, 'shouldDisplay') && ko.utils.unwrapObservable(value.shouldDisplay)), invert);
+    };
+
     var handler = {
         fadeDataKey: fadeDataKey,
         fadeContextDataKey: fadeContextDataKey,
         contexts: contexts,
         init: function (invert, element, valueAccessor) {
             var value = ko.utils.unwrapObservable(valueAccessor());
-            var shouldDisplay = xor(_.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay, invert);
+            var shouldDisplay = getShouldDisplay(valueAccessor, invert);
             $(element).toggle(shouldDisplay);
             var data = {
                 contextId: findContextId(element, value)
@@ -114,8 +119,7 @@ define([
         update: function (invert, element, valueAccessor, allBindings, viewModel, bindingContext) {
             var data = ko.utils.domData.get(element, fadeDataKey);
             var context = contexts[data.contextId];
-            var value = ko.utils.unwrapObservable(valueAccessor());
-            var shouldDisplay = xor(_.isBoolean(value) ? value : _.has(value, 'shouldDisplay') && value.shouldDisplay, invert);
+            var shouldDisplay = getShouldDisplay(valueAccessor, invert);
 
             if (shouldDisplay !== data.isDisplayed) {
                 if (shouldDisplay) {
