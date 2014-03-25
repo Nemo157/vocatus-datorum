@@ -11,7 +11,9 @@ define(['lodash', 'jquery', 'knockout'], function ( _, $, ko) {
         if (pageHolder) {
             pageHolder.params = params;
             if (pageHolder.model() && pageHolder.model().refresh) {
-                pageHolder.model().refresh(params, forceRefresh);
+                if (forceRefresh || !pageHolder.isCurrentPage()) {
+                    pageHolder.model().refresh(params, forceRefresh);
+                }
             }
         } else {
             this.loadPage(path, id, params);
