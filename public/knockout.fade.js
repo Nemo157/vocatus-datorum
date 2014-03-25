@@ -14,51 +14,56 @@ define([
 
     var fade = function (element) {
         var data = ko.utils.domData.get(element, fadeDataKey);
-        var context = contexts[data.contextId];
-        if (!context.transitioning) {
-            context.transitioning = true;
-            data.isDisplayed = false;
-            // This only works because of the defer below.
-            $(element).fadeOut(context.nextPage ? 'fast' : 'slow', onFaded);
+        if (data) {
+            var context = contexts[data.contextId];
+            if (!context.transitioning) {
+                context.transitioning = true;
+                data.isDisplayed = false;
+                // This only works because of the defer below.
+                $(element).fadeOut(context.nextPage ? 'fast' : 'slow', onFaded);
+            }
         }
     };
 
     var show = function (element, bindingContext) {
         var data = ko.utils.domData.get(element, fadeDataKey);
-        var context = contexts[data.contextId];
-        if (!context.transitioning) {
-            context.transitioning = true;
-            if (!data.isBound) {
-                if (data.savedNodes) {
-                    ko.virtualElements.setDomNodeChildren(element, ko.utils.cloneNodes(data.savedNodes));
+        if (data) {
+            var context = contexts[data.contextId];
+            if (!context.transitioning) {
+                context.transitioning = true;
+                if (!data.isBound) {
+                    if (data.savedNodes) {
+                        ko.virtualElements.setDomNodeChildren(element, ko.utils.cloneNodes(data.savedNodes));
+                    }
+                    ko.applyBindingsToDescendants(bindingContext, element);
+                    data.isBound = true;
                 }
-                ko.applyBindingsToDescendants(bindingContext, element);
-                data.isBound = true;
+                data.isDisplayed = true;
+                // Give the page more time to load on first show.
+                $(element).fadeIn(data.beenShown ? 'fast' : 'slow', onShown);
+                data.beenShown = true;
             }
-            data.isDisplayed = true;
-            // Give the page more time to load on first show.
-            $(element).fadeIn(data.beenShown ? 'fast' : 'slow', onShown);
-            data.beenShown = true;
         }
     };
 
     var onFaded = function () {
         var data = ko.utils.domData.get(this, fadeDataKey);
-        var context = contexts[data.contextId];
-        context.transitioning = false;
-        if (!data.savedNodes) {
-            data.savedNodes = ko.utils.cloneNodes(ko.virtualElements.childNodes(this), true);
-        }
-        ko.virtualElements.emptyNode(this);
-        data.isBound = false;
-        if (context.nextPage) {
-            show(context.nextPage, context.nextBindingContext);
+        if (data) {
+            var context = contexts[data.contextId];
+            context.transitioning = false;
+            if (!data.savedNodes) {
+                data.savedNodes = ko.utils.cloneNodes(ko.virtualElements.childNodes(this), true);
+            }
+            ko.virtualElements.emptyNode(this);
+            data.isBound = false;
+            if (context.nextPage) {
+                show(context.nextPage, context.nextBindingContext);
+            }
         }
     };
 
     var onShown = function () {
         var data = ko.utils.domData.get(this, fadeDataKey);
-        // data will be null if this element was removed while fading
         if (data) {
             var context = contexts[data.contextId];
             context.transitioning = false;
