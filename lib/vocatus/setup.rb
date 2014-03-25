@@ -5,6 +5,6 @@ DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://vocatus_datorum:vo
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-require 'vocatus/seed'
+#require 'vocatus/seed'
 
 Vocatus::Datorum::Api.finalize

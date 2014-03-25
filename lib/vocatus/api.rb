@@ -77,6 +77,12 @@ module Vocatus
       has n, :recipes
     end
 
+    class Ingredient
+      associated_set :cocktails_used_in, Cocktail do |ingredient|
+        Cocktail.all(Cocktail.recipes.ingredients.ingredient.id => ingredient.id)
+      end
+    end
+
     class Api < GipAN::Api
       resource Cocktail
       resource Recipe
