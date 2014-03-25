@@ -10,9 +10,9 @@
             span data-bind='text: name'
             span.fa.fa-spin.fa-spinner< data-bind="fadenot: { shouldDisplay: ingredients().loaded, context: 'ingredients' }"
           .col-xs-6.text-right data-bind='if: $root.user().can_edit'
-            // a.btn.btn-xs.btn-link data-bind='attr: { href: edit_url }'
+            a.btn.btn-xs.btn-link data-bind='attr: { href: edit_url }'
               span.glyphicon.glyphicon-pencil.text-primary
-            // a.btn.btn-xs.btn-link data-bind='attr: { href: url }' data-method='delete' data-confirm='Are you sure you want to delete recipe.name?'
+            a.btn.btn-xs.btn-link data-bind='attr: { href: url }' data-method='delete' data-confirm='Are you sure you want to delete recipe.name?'
               span.glyphicon.glyphicon-trash.text-danger
     .panel-body data-bind="fade: { shouldDisplay: ingredients().loaded, context: 'ingredients' }"
       ul.list-unstyled data-bind='foreach: ingredients().items'
