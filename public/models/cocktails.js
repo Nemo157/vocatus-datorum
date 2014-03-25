@@ -1,12 +1,10 @@
 define([
-    './cocktail',
-    './entities'
+    './entities',
+    'models/cocktail'
 ], function (
-    Cocktail,
     EntityListType
 ) {
     return new EntityListType({
-        name: 'cocktails',
-        model: Cocktail
+        name: 'cocktails'
     });
 });

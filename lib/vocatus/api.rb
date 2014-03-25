@@ -29,20 +29,11 @@ module Vocatus
 
     class Ingredient
       include Entity
-      include GipAN::Abstract
-
-      property :type, Discriminator, writer: :protected
 
       property :name, String, required: true, unique: true
       property :image_url, String, length: 0..400
       property :description, Text
-    end
-
-    class Spirit < Ingredient
       property :abv, Float
-    end
-
-    class Mixer < Ingredient
     end
 
     class QuantifiedIngredient
@@ -87,8 +78,6 @@ module Vocatus
       resource Cocktail
       resource Recipe
       resource Ingredient
-      resource Spirit
-      resource Mixer
 
       resource User
       resource UserSession

@@ -5,11 +5,7 @@ nav.navbar.navbar-inverse.navbar-static-top role='navigation'
   .collapse.navbar-collapse#navbar-collapse-1
     ul.nav.navbar-nav
       li: a href='/cocktails' Cocktails
-      == dropdown text: 'Ingredients', el: 'li'
-        li: a href='/ingredients' All
-        li.divider
-        li: a href='/spirits' Spirits
-        li: a href='/mixers' Mixers
+      li: a href='/ingredients' Ingredients
     ul.nav.navbar-nav.navbar-right.loading-hidden
       == ko 'if: user().logged_in'
         == dropdown element: "span data-bind='text: user().email'", el: 'li'

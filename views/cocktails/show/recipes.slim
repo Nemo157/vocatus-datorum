@@ -4,11 +4,11 @@ h3.col-md-12
   .pull-right data-bind='if: $root.user().can_edit'
     a.btn.btn-link data-bind='attr: { href: new_url }'
       span.glyphicon.glyphicon-plus.text-primary
-.col-sm-12 data-bind='if: $root.user().can_edit() && loaded() && items().length === 0'
+.col-sm-12 data-bind='fade: $root.user().can_edit() && loaded() && count() === 0'
   .alert.alert-info
     | None yet, you should
     a.alert-link<> data-bind='attr: { href: new_url }' add
     | one.
-.col-sm-12 data-bind='fade: loaded'
+.col-sm-12 data-bind='fade: loaded() && count() > 0'
   == ko 'foreach: items'
     == slim :'cocktails/show/recipe'

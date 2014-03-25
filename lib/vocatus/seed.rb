@@ -4,41 +4,41 @@ module Vocatus
 
     entities = []
 
-    entities << gin = Spirit.create({
+    entities << gin = Ingredient.create({
       name: 'Gin',
       description: 'Gin is a spirit which derives its predominant flavour from juniper berries (Juniperus communis). From its earliest beginnings in the Middle Ages, gin has evolved over the course of a millennium from an herbal medicine to an object of commerce in the spirits industry. Today, the gin category is one of the most popular and widely distributed range of spirits, and is represented by products of various origins, styles, and flavor profiles that all revolve around juniper as a common ingredient.',
       image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/DecaturGins.jpg/250px-DecaturGins.jpg',
       abv: 0.4
     })
 
-    entities << Spirit.create({
+    entities << Ingredient.create({
       name: 'Dark Rum',
       description: 'Rum is a distilled alcoholic beverage made from sugarcane byproducts, such as molasses, or directly from sugarcane juice, by a process of fermentation and distillation. The distillate, a clear liquid, is then usually aged in oak barrels. Rum can be referred to in Spanish by descriptors such as ron viejo ("old rum") and ron añejo ("aged rum").',
       image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Rum_display_in_liquor_store.jpg/350px-Rum_display_in_liquor_store.jpg',
       abv: 0.4
     })
 
-    entities << Mixer.create({
+    entities << Ingredient.create({
       name: 'Tonic Water',
       description: '',
       image_url: ''
     })
-    entities << Mixer.create({
+    entities << Ingredient.create({
       name: 'Cream',
       description: '',
       image_url: ''
     })
-    entities << soda_water = Mixer.create({
+    entities << soda_water = Ingredient.create({
       name: 'Soda Water',
       description: '',
       image_url: ''
     })
-    entities << lemon_juice = Mixer.create({
+    entities << lemon_juice = Ingredient.create({
       name: 'Lemon Juice',
       description: '',
       image_url: ''
     })
-    entities << simple_syrup = Mixer.create({
+    entities << simple_syrup = Ingredient.create({
       name: 'Simple Syrup',
       description: 'A basic sugar-and-water syrup used to make drinks at bars. Simple syrup is made by stirring granulated sugar into hot water in a saucepan until the sugar is dissolved and then cooling the solution. Generally, the ratio of sugar to water can range anywhere from 1:1 to 2:1. Simple syrup can be used as a sweetener. However, since it gels readily when pectin is added, its primary culinary use is as a base for fruit sauces, toppings and preserves.',
       image_url: ''

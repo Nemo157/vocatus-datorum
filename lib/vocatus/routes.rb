@@ -23,22 +23,6 @@ module Vocatus
             'edit' => 'ingredients/edit',
           },
       },
-      'spirits' => {
-          '' => 'spirits/index',
-          'new' => 'spirits/new',
-          ':spirit_id' => {
-            '' => 'spirits/show',
-            'edit' => 'spirits/edit',
-          },
-      },
-      'mixers' => {
-          '' => 'mixers/index',
-          'new' => 'mixers/new',
-          ':mixer_id' => {
-            '' => 'mixers/show',
-            'edit' => 'mixers/edit',
-          },
-      },
       'users' => {
           '' => 'users/index',
           'new' => 'users/new',
