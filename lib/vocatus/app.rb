@@ -4,12 +4,14 @@ require 'sinatra/base'
 require 'vocatus/routes'
 require 'vocatus/slim_helpers'
 require 'vocatus/template_helpers'
+require 'vocatus/authentication'
 
 module Vocatus
   module Datorum
     class App < Sinatra::Base
       include SlimHelpers
       include TemplateHelpers
+      include Authentication
 
       enable :logging
 

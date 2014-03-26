@@ -7,7 +7,6 @@ module Vocatus
         entity_class.class_eval do
           include GipAN::Resource
 
-          property :id, entity_class::Serial, writer: :protected
           property :created_at, DateTime, writer: :protected
           property :updated_at, DateTime, writer: :protected
           property :deleted_at, entity_class::ParanoidDateTime, reader: :protected, writer: :protected
@@ -20,6 +19,8 @@ module Vocatus
         entity_class.class_eval do
           include BaseEntity
 
+          property :id, entity_class::Serial, writer: :protected
+
           property :created_by_id, Integer, reader: :protected, writer: :protected
           property :updated_by_id, Integer, reader: :protected, writer: :protected
           property :deleted_by_id, Integer, reader: :protected, writer: :protected
@@ -29,9 +30,9 @@ module Vocatus
           belongs_to :deleted_by, Entity.user_class, child_key: :deleted_by_id, reader: :protected, writer: :protected
 
           before :save do |entity|
-            current_user = Entity.user_class.current_user
+            current_user = Entity.user_class.current
             if current_user
-              if entity.new_record? && entity.created_by.nil?
+              if entity.new? && entity.created_by.nil?
                 entity.created_by = current_user
               end
               entity.updated_by = current_user
@@ -39,7 +40,7 @@ module Vocatus
           end
 
           before :destroy do |entity|
-            current_user = Entity.user_class.current_user
+            current_user = Entity.user_class.current
             if current_user
               entity.deleted_by = current_user
             end

@@ -1,6 +1,7 @@
 require 'gipan'
 require 'abstract'
 require 'vocatus/entity'
+require 'vocatus/authentication'
 require 'securerandom'
 
 module Vocatus
@@ -8,17 +9,17 @@ module Vocatus
     class User
       include BaseEntity
 
+      property :id, Serial, writer: :protected, min: 0
+
       property :email, String, required: true, unique: true
 
       has n, :user_sessions
-
-      class << self
-        attr_accessor :current_user
-      end
     end
 
     class UserSession
       include BaseEntity
+
+      property :id, Serial, writer: :protected, min: 0
 
       property :client_id, UUID, writer: :protected, required: true, default: -> model, property { SecureRandom.uuid }
 
@@ -75,6 +76,8 @@ module Vocatus
     end
 
     class Api < GipAN::Api
+      include Authentication
+
       resource Cocktail
       resource Recipe
       resource Ingredient
