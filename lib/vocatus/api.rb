@@ -1,5 +1,6 @@
 require 'gipan'
 
+require_relative 'rights'
 require_relative 'authentication'
 
 require_relative 'api/cocktail'

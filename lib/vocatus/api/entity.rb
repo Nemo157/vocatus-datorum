@@ -16,31 +16,43 @@ module Vocatus
           property :updated_by_id, Integer, reader: :protected, writer: :protected
           property :deleted_by_id, Integer, reader: :protected, writer: :protected
 
-          belongs_to :created_by, User, child_key: :created_by_id, writer: :protected
-          belongs_to :updated_by, User, child_key: :updated_by_id, writer: :protected
-          belongs_to :deleted_by, User, child_key: :deleted_by_id, reader: :protected, writer: :protected
+          belongs_to :created_by, User, child_key: :created_by_id
+          belongs_to :updated_by, User, child_key: :updated_by_id
+          belongs_to :deleted_by, User, child_key: :deleted_by_id
 
-          before :save do |entity|
-            current_user = User.current
-            if current_user
-              if entity.new? && entity.created_by.nil?
-                entity.created_by = current_user
-              end
-              entity.updated_by = current_user
-            end
-          end
+          before :save, :set_update_user
+          before :destroy, :set_delete_user
 
-          before :destroy do |entity|
-            current_user = User.current
-            if current_user
-              entity.deleted_by = current_user
-            end
+          validates_with_method :verify_user_rights, when: [:create, :update, :destroy]
+
+          before :valid? do |context=:default|
+            @validation_context = context
           end
         end
       end
 
-      class << self
-        attr_accessor :user_class
+      def set_update_user
+        if User.current
+          if new? && created_by.nil?
+            self.created_by = User.current
+          end
+          self.updated_by = User.current
+        else
+        end
+      end
+
+      def set_delete_user
+        if User.current
+          self.deleted_by = User.current
+        end
+      end
+
+      def verify_user_rights
+        if User.current and User.current.can @validation_context, self
+          true
+        else
+          [ false, "You do not have rights to #{@validation_context} this entity" ]
+        end
       end
     end
   end

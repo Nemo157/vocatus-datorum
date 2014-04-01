@@ -9,6 +9,8 @@ module Vocatus
 
       property :email, String, required: true, unique: true
 
+      property :options, Flag[ :superuser ]
+
       has n, :user_sessions
     end
 
