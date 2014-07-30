@@ -18,9 +18,9 @@ define([
             this.owner = ko.observable(owner);
             this.id = ko.observable();
             this.loaded = ko.observable();
-            this.onLoad(false, data);
             this.url = ko.computed(_.bind(_.template('${root}/${plural_name}/${id()}'), _, this));
             this.edit_url = ko.computed(_.bind(_.template('${url()}/edit'), _, this));
+            this.onLoad(false, data);
             if (config.init && config.init.call) {
                 config.init.call(this);
             }

@@ -18,10 +18,10 @@ define([
             this.owner = ko.observable(owner);
             this.items = ko.observableArray();
             this.loaded = ko.observable();
-            this.onLoad(false, data);
             this.url = ko.computed(function () {
                 return this.owner() && _.template('${owner().url()}/${plural_name}', this);
             }, this);
+            this.onLoad(false, data);
             if (config.init && config.init.call) {
                 config.init.call(this);
             }
