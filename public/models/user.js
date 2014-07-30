@@ -1,16 +1,14 @@
 define([
     'knockout',
-    './entity',
-    './user_sessions'
+    './entity'
 ], function (
     ko,
-    EntityType,
-    UserSessions
+    EntityType
 ) {
     return new EntityType({
         name: 'user',
         mapping: {
-            user_sessions: UserSessions.mapping
+            user_sessions: 'models/user_sessions'
         },
         init: function () {
             this.email = ko.observable();
