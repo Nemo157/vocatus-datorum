@@ -1,11 +1,13 @@
 define([
     'lodash',
     'jquery',
-    'knockout'
+    'knockout',
+    'when'
 ], function (
     _,
     $,
-    ko
+    ko,
+    when
 ) {
     var ShowPage = function (config) {
         _.bindAll(this);
@@ -22,11 +24,13 @@ define([
         if (entity.loaded()) {
             this.entity(entity);
             if (forceRefresh) {
-                entity.refresh();
+                return entity.refresh();
+            } else {
+                return when(true);
             }
         } else {
             this.entity(null);
-            entity.refresh().then(this.entity);
+            return entity.refresh().then(this.entity);
         }
     };
 

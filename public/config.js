@@ -59,7 +59,11 @@
                 '//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min',
                 '//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie'
             ),
-            'json': '//rawgithub.com/millermedeiros/requirejs-plugins/v1.0.2/src/json'
+            'json': '//rawgithub.com/millermedeiros/requirejs-plugins/v1.0.2/src/json',
+            'nprogress': choose(
+                '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.3/nprogress.min',
+                '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.3/nprogress'
+            ),
         },
         map: {
             '*': {

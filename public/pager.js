@@ -1,9 +1,21 @@
-define(['lodash', 'jquery', 'knockout'], function ( _, $, ko) {
+define(['lodash', 'jquery', 'knockout', 'nprogress'], function ( _, $, ko, NProgress) {
+    NProgress.configure({ showSpinner: false });
+
     var Pager = function (logger) {
         this.logger = logger;
         this.pages = ko.observableArray();
         this.currentPage = ko.observable();
         this.last_page = ko.observable();
+        ko.computed(function () {
+            if (this.currentPage()) {
+                var pageHolder = _.find(this.pages(), { id: this.currentPage().id });
+                if (pageHolder.ready()) {
+                    NProgress.done();
+                } else {
+                    NProgress.start();
+                }
+            }
+        }, this);
     };
 
     Pager.prototype.ensurePageLoaded = function (id, path, params, forceRefresh) {
@@ -24,6 +36,7 @@ define(['lodash', 'jquery', 'knockout'], function ( _, $, ko) {
         var id = path.replace(/\//g, '-');
         this.ensurePageLoaded(id, path, params, true);
         this.last_page(this.currentPage());
+        NProgress.start();
         this.currentPage({
             id: id,
             path: path,

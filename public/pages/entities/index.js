@@ -1,11 +1,13 @@
 define([
     'lodash',
     'jquery',
-    'knockout'
+    'knockout',
+    'when'
 ], function (
     _,
     $,
-    ko
+    ko,
+    when
 ) {
     var titleCase = function (str) {
         // http://stackoverflow.com/a/196991/260593
@@ -26,10 +28,12 @@ define([
     EntitiesPage.prototype.refresh = function (params, forceRefresh) {
         if (this.entities()) {
             if (forceRefresh) {
-                this.entities().refresh();
+                return this.entities().refresh();
+            } else {
+                return when(true);
             }
         } else {
-            this.model.get().refresh().then(this.entities);
+            return this.model.get().refresh().then(this.entities);
         }
     };
 
