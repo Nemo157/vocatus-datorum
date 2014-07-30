@@ -17,7 +17,9 @@ define([
 ) {
     return ko.validatedObservable({
         email: ko.observable(),
+        isProcessing: ko.observable(),
         register: function () {
+            this.isProcessing(true);
             $.ajax({
                 type: 'POST',
                 url: '/api/users',
@@ -29,6 +31,7 @@ define([
             }).done(function (data) {
                 if (data.error) {
                     alert(JSON.stringify(data.errors));
+                    this.isProcessing(false);
                 } else {
                     var user = User.create(data);
                     $.ajax({
@@ -43,6 +46,7 @@ define([
                         app.session(session);
                         when.all([user.refresh(), session.refresh()], function () {
                             app.router.redirect((app.pager.last_page() && app.pager.last_page().originalPath) || '/');
+                            this.isProcessing(false);
                         });
                     });
                 }
