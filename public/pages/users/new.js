@@ -2,6 +2,7 @@ define([
     'jquery',
     'knockout',
     'knockout.validation',
+    'when',
     'app',
     'models/user',
     'models/user_session'
@@ -9,11 +10,12 @@ define([
     $,
     ko,
     validation,
+    when,
     app,
     User,
     UserSession
 ) {
-    var registerPage = ko.validatedObservable({
+    return ko.validatedObservable({
         email: ko.observable(),
         register: function () {
             $.ajax({
@@ -36,14 +38,15 @@ define([
                         contentType: 'application/json',
                         processData: false
                     }).done(function (data) {
+                        var session = UserSession.create(data);
                         app.user(user);
-                        app.session(UserSession.create(data));
-                        app.router.redirect((app.pager.last_page() && app.pager.last_page().originalPath) || '/');
+                        app.session(session);
+                        when.all([user.refresh(), session.refresh()], function () {
+                            app.router.redirect((app.pager.last_page() && app.pager.last_page().originalPath) || '/');
+                        });
                     });
                 }
-            });
+            }, this);
         }
-    });
-
-    return registerPage();
+    })();
 });

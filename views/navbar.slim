@@ -6,14 +6,15 @@ nav.navbar.navbar-inverse.navbar-static-top role='navigation'
     ul.nav.navbar-nav
       li: a href='/cocktails' Cocktails
       li: a href='/ingredients' Ingredients
-    ul.nav.navbar-nav.navbar-right.loading-hidden
-      == ko 'if: user().logged_in'
-        == dropdown element: "span data-bind='text: user().email'", el: 'li'
-          li: a href='/user' Profile
-          li: a href='/session' Session
-          li: a href='/' data-bind='click: $root.logout' Logout
-      == ko 'ifnot: user().logged_in'
-        == dropdown text: 'Not logged in', el: 'li'
-          li: a href='/login' Login
-          li: a href='/register' Register
+    p.nav.navbar-text.navbar-right data-bind='fade: !user() || !user().loaded()'
+      span.fa.fa-spin.fa-spinner
+    ul.nav.navbar-nav.navbar-right.loading-hidden data-bind='fade: user() && user().loaded() && user().logged_in()'
+      == dropdown element: "span data-bind='text: user().email'", el: 'li'
+        li: a href='/user' Profile
+        li: a href='/session' Session
+        li: a href='/' data-bind='click: $root.logout' Logout
+    ul.nav.navbar-nav.navbar-right.loading-hidden data-bind='fade: user() && user().loaded() && !user().logged_in()'
+      == dropdown text: 'Not logged in', el: 'li'
+        li: a href='/login' Login
+        li: a href='/register' Register
     ul.nav.navbar-nav.navbar-right

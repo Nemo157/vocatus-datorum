@@ -37,7 +37,7 @@ define([
     });
 
     var app = {
-        user: ko.observable(new User()),
+        user: ko.observable(),
         session: ko.observable(),
         logout: function () {
             if (this.session()) {
@@ -52,7 +52,7 @@ define([
                     }
                 }
                 this.session(null);
-                this.user(new User());
+                this.user(new User({ loaded: true }));
             }
         }
     };
@@ -77,6 +77,8 @@ define([
                 user.refresh();
             }
         });
+    } else {
+        app.user(new User({ loaded: true }));
     }
 
     app.session.subscribe(function (session) {
