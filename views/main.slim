@@ -13,6 +13,17 @@ html
       #nprogress .bar
         margin-top: 50px
         position: absolute
+      .loading-spinner-wrapper
+        position: absolute
+        top: 33%
+        margin-top: -2em
+        left: 0
+        width: 100%
+      .loading-spinner
+        width: 4em
+        height: 4em
+        margin-left: auto
+        margin-right: auto
   body.loading
     == slim :navbar
     #main
@@ -24,8 +35,11 @@ html
               and has a high chance of disappearing at any time.
 
       div data-bind="foreach: { data: pager.pages, as: 'page' }"
-        div data-bind='fade: page.isCurrentPage() && page.ready()'
+        div data-bind="fade: { shouldDisplay: page.isCurrentPage() && page.ready(), context: 'pages' }"
           div data-bind='template: { if: page.ready, name: page.id, data: page.model }'
+      div.loading-spinner-wrapper data-bind="fade: { shouldDisplay: !pager.current_page() || !pager.current_page().ready(), context: 'pages', extraSlow: true }"
+        div.loading-spinner
+          span.fa.fa-spin.fa-spinner.fa-4x
 
     script id=map_template(request.path_info).gsub('/', '-') type='text/html'
       == render_template map_template(request.path_info)

@@ -19,8 +19,18 @@ define([
             if (!context.transitioning) {
                 context.transitioning = true;
                 data.isDisplayed = false;
+                var speed = 'slow';
+                if (context.nextPage) {
+                    var nextData = ko.utils.domData.get(context.nextPage, fadeDataKey);
+                    if (nextData.beenShown) {
+                        speed = 'fast';
+                    }
+                    if (nextData.extraSlow) {
+                        speed = 1200;
+                    }
+                }
                 // This only works because of the defer below.
-                $(element).fadeOut(context.nextPage ? 'fast' : 'slow', onFaded);
+                $(element).fadeOut(speed, onFaded);
             }
         }
     };
@@ -41,7 +51,9 @@ define([
                 data.isDisplayed = true;
                 // Give the page more time to load on first show.
                 $(element).fadeIn(data.beenShown ? 'fast' : 'slow', onShown);
-                data.beenShown = true;
+                if (!data.alwaysSlow) {
+                    data.beenShown = true;
+                }
             }
         }
     };
@@ -110,7 +122,9 @@ define([
             var shouldDisplay = getShouldDisplay(valueAccessor, invert);
             $(element).toggle(shouldDisplay);
             var data = {
-                contextId: findContextId(element, value)
+                contextId: findContextId(element, value),
+                alwaysSlow: value && (value.alwaysSlow || value.extraSlow),
+                extraSlow: value && value.extraSlow,
             };
             ko.utils.domData.set(element, fadeDataKey, data);
             ko.utils.domNodeDisposal.addDisposeCallback(element, function () {

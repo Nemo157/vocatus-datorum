@@ -5,6 +5,7 @@ define(['lodash', 'jquery', 'knockout', 'nprogress'], function ( _, $, ko, NProg
         this.logger = logger;
         this.pages = ko.observableArray();
         this.currentPage = ko.observable();
+        this.current_page = ko.observable();
         this.last_page = ko.observable();
         ko.computed(function () {
             if (this.currentPage()) {
@@ -28,13 +29,14 @@ define(['lodash', 'jquery', 'knockout', 'nprogress'], function ( _, $, ko, NProg
                 }
             }
         } else {
-            this.loadPage(path, id, params);
+            pageHolder = this.loadPage(path, id, params);
         }
+        return pageHolder;
     };
 
     Pager.prototype.goToPage = function (path, params, originalPath) {
         var id = path.replace(/\//g, '-');
-        this.ensurePageLoaded(id, path, params, true);
+        this.current_page(this.ensurePageLoaded(id, path, params, true));
         this.last_page(this.currentPage());
         NProgress.start();
         this.currentPage({
@@ -65,6 +67,7 @@ define(['lodash', 'jquery', 'knockout', 'nprogress'], function ( _, $, ko, NProg
         }
         require(['pages/' + path], _.bind(this.pageModelLoaded, this, pageHolder), _.bind(this.pageModelLoadFailed, this, pageHolder));
         this.pages.push(pageHolder);
+        return pageHolder;
     };
 
     Pager.prototype.pageModelLoaded = function (pageHolder, pageModel) {
