@@ -26,7 +26,7 @@ define([
                 if (user) {
                     $.ajax({
                         type: 'POST',
-                        url: user.user_sessions.uri(),
+                        url: user.user_sessions().uri(),
                         data: JSON.stringify({}),
                         contentType: 'application/json',
                         processData: false
