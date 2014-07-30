@@ -25,18 +25,22 @@ define([
                 contentType: 'application/json',
                 processData: false
             }).done(function (data) {
-                var user = User.create(data);
-                $.ajax({
-                    type: 'POST',
-                    url: user.user_sessions.uri(),
-                    data: JSON.stringify({}),
-                    contentType: 'application/json',
-                    processData: false
-                }).done(function (data) {
-                    app.user(user);
-                    app.session(UserSession.create(data));
-                    app.router.redirect((app.pager.last_page().originalPath && app.pager.last_page().originalPath) || '/');
-                });
+                if (data.error) {
+                    alert(JSON.stringify(data.errors));
+                } else {
+                    var user = User.create(data);
+                    $.ajax({
+                        type: 'POST',
+                        url: user.user_sessions().uri(),
+                        data: JSON.stringify({}),
+                        contentType: 'application/json',
+                        processData: false
+                    }).done(function (data) {
+                        app.user(user);
+                        app.session(UserSession.create(data));
+                        app.router.redirect((app.pager.last_page() && app.pager.last_page().originalPath) || '/');
+                    });
+                }
             });
         }
     });
