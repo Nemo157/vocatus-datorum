@@ -12,7 +12,12 @@
       label.form-label for='email'
       input#email.form-control type='email' placeholder='Enter email' data-bind="value: email, valueUpdate: 'input'" required=true
     .pull-right
-      button.btn.btn-primary type='submit' data-toggle='modal' data-target='#warningDialog' data-bind='enable: isValid()' Login
+      button.btn.btn-primary type='submit' data-toggle='modal' data-target='#warningDialog' data-bind='enable: isValid() && !isProcessing()'
+        span data-bind="if: isProcessing"
+          | Logging in…&nbsp;
+          span.fa.fa-spin.fa-spinner
+        span data-bind="ifnot: isProcessing"
+          | Login
 
 
 .modal.fade#warningDialog tabindex='-1' role='dialog' aria-labelledby='warningDialogTitle' aria-hidden='true'
