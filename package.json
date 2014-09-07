@@ -1,0 +1,28 @@
+{
+  "name": "vocatus-datorum",
+  "version": "0.0.0",
+  "description": "Vocatus Datorum ===============",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "jquery.cookie": "~1.4.1",
+    "jquery": "~2.1.1",
+    "knockout": "~3.1.0",
+    "nprogress": "~0.1.6",
+    "knockout.mapping": "~2.4.2",
+    "one-com-knockout-projections": "~1.1.0",
+    "require-json": "~0.0.1",
+    "lodash": "~2.4.1",
+    "postal": "~0.10.1",
+    "shimney-sammy": "~0.7.4",
+    "when": "~3.4.2",
+    "knockout.validation": "~2.0.0-pre.3",
+    "knockout-bootstrap": "~0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause"
+}
