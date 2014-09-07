@@ -3,7 +3,6 @@ $: << 'lib'
 require 'sinatra'
 
 require 'bundler/setup'
-require 'vocatus/setup'
 require 'vocatus/api'
 require 'vocatus/app'
 
