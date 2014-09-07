@@ -13,7 +13,7 @@ module Vocatus
 
       belongs_to :user
     end
-
-    require_relative 'user'
   end
 end
+
+require_relative 'user'

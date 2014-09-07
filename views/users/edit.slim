@@ -1,0 +1,23 @@
+.container data-bind='with: user'
+  .page-header
+    h1
+      | Edit
+      span data-bind='text: email'
+
+  .alert.alert-danger
+    strong> WARNING:
+    | There is currently no access control on the list of users, whatever you
+      enter here will be publicly viewable.
+
+  form role='form'
+    .form-group data-bind='validationElement: options_text'
+      label.form-label for='roles'
+      input#roles.form-control type='text' placeholder='Enter roles' data-bind="value: options_text, valueUpdate: 'input'"
+    .pull-right
+      button.btn.btn-primary type='submit' data-bind='click: $parent.save.bind($parent), enable: isValid() && !$parent.isProcessing()'
+        span data-bind="if: $parent.isProcessing"
+          | Saving…&nbsp;
+          span.fa.fa-spin.fa-spinner
+        span data-bind="ifnot: $parent.isProcessing"
+          | Save
+

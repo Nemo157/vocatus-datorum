@@ -13,8 +13,7 @@ module Vocatus
 
       has n, :user_sessions
     end
-
-    require_relative 'user_session'
   end
 end
 
+require_relative 'user_session'

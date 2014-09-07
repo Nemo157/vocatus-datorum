@@ -1,6 +1,7 @@
+require_relative 'api/user'
+
 module Vocatus
   module Datorum
-    require_relative 'api/user'
     class User
       def superuser?
         options.include? :superuser

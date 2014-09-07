@@ -55,7 +55,7 @@ define([
         Entity.mapping = {
             create: function (options) {
                 var entity = Entity.create(options.data, false, options.parent);
-                return ko.observable(entity).extend({ refresh: entity });
+                return ko.validatedObservable(entity).extend({ refresh: entity });
             },
             key: function (data) {
                 return ko.utils.unwrapObservable(ko.utils.unwrapObservable(data).uri);

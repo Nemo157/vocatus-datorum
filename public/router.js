@@ -12,12 +12,12 @@ define([
     var route_helpers = {
         '/user': {
             params: function (app) {
-                return { user_id: app.user().id() };
+                return { user_id: app.user() && app.user().id() };
             }
         },
         '/session': {
             params: function (app) {
-                return { user_session_id: app.session().id() };
+                return { user_session_id: app.session() && app.session().id() };
             }
         }
     };
