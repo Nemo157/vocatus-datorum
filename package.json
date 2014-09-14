@@ -17,7 +17,6 @@
     "shimney-sammy": "0.7.4",
     "when": "3.4.2",
     "knockout.validation": "2.0.0-pre.3",
-    "knockout-bootstrap": "0.2.0",
     "font-awesome": "4.2.0"
   },
   "devDependencies": {},

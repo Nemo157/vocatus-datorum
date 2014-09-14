@@ -16,6 +16,10 @@
         return prodSuffix('/vendor/' + name + '/' + (dist || 'dist') + '/' + name, '.min');
     };
 
+    var vendor2ed = function (name) {
+        return prodSuffix('/vendor/' + name, '.min');
+    };
+
     requirejs.config({
         baseUrl: '/',
         paths: {
@@ -33,7 +37,7 @@
             'inflector': '/vendor2/underscore.inflection',
             'when': '/vendor2/when',
             'knockout.validation': '/vendor/knockout.validation/Dist/knockout.validation',
-            'knockout-bootstrap': '/vendor/knockout-bootstrap/build/knockout-bootstrap.min',
+            'knockout-bootstrap': vendor2ed('knockout-bootstrap'),
             'jquery.cookie': '/vendor/jquery.cookie/jquery.cookie',
             'json': '/vendor2/require-json',
             'nprogress': '/vendor/nprogress/nprogress',
