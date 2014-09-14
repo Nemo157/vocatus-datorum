@@ -17,7 +17,7 @@
     };
 
     var vendor2ed = function (name) {
-        return prodSuffix('/vendor/' + name, '.min');
+        return prodSuffix('/vendor2/' + name, '.min');
     };
 
     requirejs.config({
