@@ -19,17 +19,20 @@ define([
                 return this.logged_in();
             }, this);
             this.options_text = ko.computed({
-                get: function () {
+                read: function () {
                     var options_text = '';
-                    this.options.forEach(function (text) {
-                        options_text = options_text + ',' + text;
-                    });
+                    if (this.options) {
+                        this.options().forEach(function (text) {
+                            options_text = options_text + ',' + text;
+                        });
+                    }
                     return options_text;
                 },
-                set: function (text) {
-                    this.options = text.split(',');
-                }
-            }, this);
+                write: function (text) {
+                    this.options(text.split(','));
+                },
+                owner: this
+            });
         }
     });
 });
