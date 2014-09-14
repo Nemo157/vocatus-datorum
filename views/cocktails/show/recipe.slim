@@ -7,6 +7,8 @@
             span.fa.fa-spin.fa-spinner
         .row data-bind='fade: loaded'
           .col-xs-6
+            a.btn.btn-xs.btn-link data-bind="if: $root.woodhouse.available, click: function() { $root.woodhouse.pour.call($root.woodhouse, $data); }"
+              span.fa.fa-beer.text-primary
             span data-bind='text: name'
             span.fa.fa-spin.fa-spinner< data-bind="fadenot: { shouldDisplay: ingredients().loaded, context: 'ingredients' }"
           .col-xs-6.text-right data-bind='if: $root.user().can_edit'

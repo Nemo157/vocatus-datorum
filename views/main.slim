@@ -45,3 +45,4 @@ html
       == render_template map_template(request.path_info)
 
     script id='require' src='/vendor2/require.min.js' data-main='/config' data-page='#{map_template(request.path_info)}'
+    == slim :woodhouse

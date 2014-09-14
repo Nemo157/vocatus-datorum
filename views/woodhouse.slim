@@ -1,0 +1,13 @@
+.modal.fade#woodhouse tabindex='-1' role='dialog' aria-labelledby='woodhouseTitle' aria-hidden='true' data-backdrop='static'
+  .modal-dialog data-bind="with: woodhouse"
+    .modal-content
+      .modal-header
+        // button type='button' class='close' data-dismiss='modal' aria-hidden='true' &times;
+        h4.modal-title#woodhouseTitle
+          span data-bind="if: current_recipe"
+            | Woodhouse, where's my 
+            span data-bind="text: current_recipe().name"
+      .modal-body
+        .alert.alert-info Woodhouse is coming soon!
+      .modal-footer
+        button.btn.btn-warning type='button' data-dismiss='modal' Cancel

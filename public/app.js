@@ -13,7 +13,8 @@ define([
     'models/user',
     'preloader',
     'pager',
-    'knockout.fade'
+    'knockout.fade',
+    'woodhouse'
 ], function (
     _,
     $,
@@ -27,7 +28,9 @@ define([
     UserSessions,
     User,
     Preloader,
-    Pager
+    Pager,
+    fade,
+    Woodhouse
 ) {
     validation.init({
         insertMessages: false,
@@ -63,6 +66,7 @@ define([
     app.pager = new Pager(app.logger);
     app.router = new Router(app, app.pager);
     app.preloader = new Preloader(app.router, app.pager);
+    app.woodhouse = new Woodhouse(app.user);
 
     if ($.cookie('session_id')) {
         var session_id = $.cookie('session_id');
